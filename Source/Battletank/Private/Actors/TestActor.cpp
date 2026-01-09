@@ -24,3 +24,8 @@ void ATestActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ATestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
