@@ -25,14 +25,15 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	
-	
-	class USpringArmComponent* arm;
-	class UCameraComponent* camera;
+	void MoveFunctionupdown(float AxisValue);
+	void MoveFunctionforward(float AxisValue);
+	void  PressedFunction();
+	void ReleasedFunction();
+ 
 	//渲染序列帧动画的组件
 	class UPaperFlipbookComponent* RenderFlipbookComponent;
 	//资产
 	class UPaperFlipbook* TankFlipbook;
 	class USphereComponent * Sphere;
 };
+ 
