@@ -25,7 +25,7 @@ ACamera2DActor::ACamera2DActor()
 	Main2DCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Main2DCamera"));
 	Main2DCamera->SetupAttachment(CameraSpringArm);
 	Main2DCamera->SetProjectionMode(ECameraProjectionMode::Orthographic); // 纯正交（2D必选）
-	Main2DCamera->SetOrthoWidth(4500.0f); // 2D视口宽度（适配你的贴图尺寸）
+	Main2DCamera->SetOrthoWidth(2500.0f); // 2D视口宽度（适配你的贴图尺寸）
 	Main2DCamera->SetRelativeLocation(FVector(0, 0, 0)); // 正交模式位置无需偏移
 }
 

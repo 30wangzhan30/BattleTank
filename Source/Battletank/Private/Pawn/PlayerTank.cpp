@@ -32,7 +32,7 @@ void APlayerTank::BeginPlay()
 	if (RenderFlipbookComponent && TankFlipbook)
 	{
 		RenderFlipbookComponent->SetFlipbook(TankFlipbook);
-		RenderFlipbookComponent->SetRelativeRotation(FRotator( -90.0f,  0.0f,  0.0f) );
+		RenderFlipbookComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	}
 	else
 	{
