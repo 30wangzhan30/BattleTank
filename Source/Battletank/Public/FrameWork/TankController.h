@@ -3,20 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
-#include "HomeGameModeBase.generated.h"
+#include "GameFramework/PlayerController.h"
+#include "TankController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLETANK_API AHomeGameModeBase : public AGameModeBase
+class BATTLETANK_API ATankController : public APlayerController
 {
-public:
 	GENERATED_BODY()
 	
-public:
-	
-	AHomeGameModeBase();
+private:
 	virtual void BeginPlay() override;
 };
