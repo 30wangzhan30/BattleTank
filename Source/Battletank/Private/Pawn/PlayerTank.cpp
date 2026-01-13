@@ -56,75 +56,60 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	 
 	    
 	 
-	//轴映射回调的函数必须有一个float类型的参数, 无返回值
-	PlayerInputComponent->BindAxis(TEXT("Moveupanddown"), this, &APlayerTank::MoveFunctionupdown);
-	PlayerInputComponent->BindAxis(TEXT("Moveforward"), this, &APlayerTank::MoveFunctionforward);
+	
+	// 绑定操作映射到函数 
+	PlayerInputComponent->BindAction("MoveRight", IE_Pressed, this, &APlayerTank::OnMoveRightPressed);
+	PlayerInputComponent->BindAction("MoveLeft", IE_Pressed, this, &APlayerTank::OnMoveLeftPressed);
+	PlayerInputComponent->BindAction("MoveUp", IE_Pressed, this, &APlayerTank::OnMoveUpPressed);
+	PlayerInputComponent->BindAction("MoveDown", IE_Pressed, this, &APlayerTank::OnMoveDownPressed);
+	 
 }
 //想要实现计算瓦片地图每个格子的位置然后SetRelativeLocation到将要移动到的位置
-void APlayerTank::MoveFunctionupdown(float AxisValue)
+void APlayerTank::OnMoveRightPressed( )
 {
-	//if (AxisValue == 0) return;//没有按键, 不执行任何的逻辑
- 
-	
-	//RenderFlipbookComponent->AddRelativeLocation(FVector(  0,  AxisValue, 0));
-	
-	// 1. 死区过滤：按键松开时重置状态（核心！）
-	// const float DeadZone = 0.1f;
-	// if (FMath::Abs(AxisValue) < DeadZone)
-	// {
-	// 	LastHorizontalDir = 0.0f; // 重置上下方向状态
-	// 	return;
-	// }
-	  float CurrentDir = FMath::Sign(AxisValue);
-	  // 仅方向变化时触发移动
-	  if (CurrentDir != LastHorizontalDir)
-	  {
-	 	CurrentGridX += (CurrentDir > 0 ? 1 : -1);  
-	 	UpdateTankGridLocation(); // 刷新坦克位置
-	  	LastHorizontalDir = CurrentDir;
-	  }
-	//RenderFlipbookComponent->SetRelativeLocation(FVector(LastHorizontalDir,0,0));
-	
-	
-	//AddActorLocalOffset(GetActorForwardVector()*32*AxisValue);
+	// 向右移动1格
+	CurrentGridX += 1;
+	//更新朝向
+	CurrentDirection = ETankDirection::Right; 
+	UpdateTankRotation();
+	// 更新实际位置
+	UpdateTankGridLocation();  
+
 }
 
-void APlayerTank::MoveFunctionforward(float AxisValue)
+void APlayerTank::OnMoveLeftPressed()
 { 
- 
-	//RenderFlipbookComponent->AddRelativeLocation(FVector(  AxisValue,0  , 0));
-	// 1. 死区过滤：按键松开时重置状态（核心！）
-	// const float DeadZone = 0.1f;
-	// if (FMath::Abs(AxisValue) < DeadZone)
-	// {
-	// 	LastHorizontalDir = 0.0f; // 重置上下方向状态
-	// 	return;
-	// }
-	float CurrentDir = FMath::Sign(AxisValue);
-	// 仅方向变化时触发移动
-	if (CurrentDir != LastVerticalDir)
-	{
-		CurrentGridY += (CurrentDir > 0 ? 1 : -1);  
-		UpdateTankGridLocation(); // 刷新坦克位置
-		LastVerticalDir = CurrentDir;
-	}//RenderFlipbookComponent->SetRelativeLocation(FVector(0,LastVerticalDir,0));
+	
+	CurrentGridX -= 1;
+	//更新朝向
+	CurrentDirection = ETankDirection::Left; 
+	UpdateTankRotation();
+	// 更新实际位置
+	UpdateTankGridLocation();
 }
-void APlayerTank::PressedFunction()
+
+void APlayerTank::OnMoveUpPressed( )
 {
-	
-	
+	CurrentGridY -= 1;
+	//更新朝向
+	CurrentDirection = ETankDirection::Up; 
+	UpdateTankRotation();
+	// 更新实际位置
+	UpdateTankGridLocation();
 }
-void APlayerTank::ReleasedFunction()
+void APlayerTank::OnMoveDownPressed( )
 {
-	
-	
+	CurrentGridY += 1;
+	//更新朝向
+	CurrentDirection = ETankDirection::Down; 
+	UpdateTankRotation();
+	// 更新实际位置
+	UpdateTankGridLocation();
 }
 
 void APlayerTank::UpdateTankGridLocation()
 {
 	FVector TargetPos = MapStartPos;//初始位置
-
-	 
 	// 左右移动  
 	TargetPos.Y += CurrentGridX * GridStep;
 	// 上下移动  
@@ -132,4 +117,31 @@ void APlayerTank::UpdateTankGridLocation()
 
 	// 瞬移到目标格子
   SetActorLocation(TargetPos);
+}
+
+
+// 核心：根据朝向更新旋转角度
+void  APlayerTank::UpdateTankRotation()
+{
+	FRotator NewRotation = FRotator::ZeroRotator;
+    
+	// UE中Yaw（偏航角）：0°=朝右，90°=朝上（前），180°=朝左，270°=朝下（后）
+	switch (CurrentDirection)
+	{
+	case ETankDirection::Left:
+		NewRotation.Yaw = 180.0f; // 初始朝向：左
+		break;
+	case ETankDirection::Right:
+		NewRotation.Yaw = 0.0f;    // 朝右
+		break;
+	case ETankDirection::Up:
+		NewRotation.Yaw =  270.0f;   // 朝上（前）
+		break;
+	case ETankDirection::Down:
+		NewRotation.Yaw =90.0f;  // 朝下（后）
+		break;
+	}
+
+	// 设置坦克旋转（平滑旋转可选，直接设置更适配格子移动）
+	SetActorRotation(NewRotation);
 }
