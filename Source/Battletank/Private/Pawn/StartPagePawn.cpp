@@ -10,18 +10,15 @@ AStartPagePawn::AStartPagePawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	
+	UClass* WidgetBlueprintClass = LoadClass<UMainUI>(
+	  nullptr, 
+	  TEXT("Game/StartPawn/StartPage.StartPage'"));
 	 
-	// 将Widget组件挂载到根组件（如果根组件为空，设为根组件）
-	if (!RootComponent)
+	 
+	if (WidgetBlueprintClass )
 	{
-		RootComponent = TankWidgetComponent;
+		TankWidgetComponent = CreateWidget<UMainUI>(GetWorld(),  WidgetBlueprintClass);
 	}
-	else
-	{
-	//	TankWidgetComponent->SetupAttachment(RootComponent);
-	}
-
  
 //	TankWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间（UI跟随屏幕，不是世界空间）
 //	TankWidgetComponent->SetDrawSize(FVector2D(800, 600));    // Widget显示大小（宽800，高600）

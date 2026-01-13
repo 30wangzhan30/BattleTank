@@ -26,7 +26,9 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
 	void resetscore();
 	int getgamescore() const{return Gamestore;};
 	
-	
+	 
+    
+	 
 	 
     float GameSpeed; 
     
