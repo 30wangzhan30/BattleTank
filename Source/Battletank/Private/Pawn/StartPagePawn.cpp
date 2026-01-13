@@ -3,7 +3,7 @@
 
 #include "Pawn/StartPagePawn.h"
 #include "Components/WidgetComponent.h"
-
+#include "UI/MainUI.h"
 // Sets default values
 AStartPagePawn::AStartPagePawn()
 {
@@ -11,7 +11,7 @@ AStartPagePawn::AStartPagePawn()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	
-	TankWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("TankWidgetComponent"));
+	 
 	// 将Widget组件挂载到根组件（如果根组件为空，设为根组件）
 	if (!RootComponent)
 	{
