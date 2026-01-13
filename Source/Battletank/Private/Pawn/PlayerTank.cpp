@@ -57,7 +57,7 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	    
 	 
 	
-	// 绑定操作映射到函数 
+	// 绑定操作映射到函数 (玩家坦克写在子类里)
 	PlayerInputComponent->BindAction("MoveRight", IE_Pressed, this, &APlayerTank::OnMoveRightPressed);
 	PlayerInputComponent->BindAction("MoveLeft", IE_Pressed, this, &APlayerTank::OnMoveLeftPressed);
 	PlayerInputComponent->BindAction("MoveUp", IE_Pressed, this, &APlayerTank::OnMoveUpPressed);
@@ -145,3 +145,7 @@ void  APlayerTank::UpdateTankRotation()
 	// 设置坦克旋转（平滑旋转可选，直接设置更适配格子移动）
 	SetActorRotation(NewRotation);
 }
+
+
+
+//子弹逻辑

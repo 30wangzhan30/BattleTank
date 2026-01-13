@@ -40,11 +40,11 @@ void ACamera2DActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//  摄像机跟随玩家（平滑移动，不绑定）
+	//  摄像机跟随玩家
 	if (TargetPawn && FollowSpeed > 0)
 	{
 		FVector TargetLocation = TargetPawn->GetActorLocation();
-		TargetLocation.Z = GetActorLocation().Z+200; // 固定Z轴，避免上下移动
+		TargetLocation.Z = GetActorLocation().Z+200; // 固定Z轴
 		SetActorLocation(FMath::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, FollowSpeed));
 	}
 }
