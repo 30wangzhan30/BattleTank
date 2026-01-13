@@ -7,7 +7,6 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-
 #include "MainUI.generated.h"
 
  
@@ -21,8 +20,10 @@ struct FTimerHandle;
   UCLASS()	
 class BATTLETANK_API UMainUI : public UUserWidget
   {
-	  GENERATED_BODY()
-  
+  	GENERATED_BODY() // 必须在类内第一行
+
+  	// 类成员...
+ 
 private:
 	TArray<FWidgetAnimationDynamicEvent> StoredAnimationDelegates;
 	
@@ -31,16 +32,16 @@ private:
 	int MaxBGIndex;
 	float BGBlendInterval;
 	
-	void SetBGSwitcherTimer();
-	void ClearBGSwitcherTimer();
+	//void SetBGSwitcherTimer();
+	//void ClearBGSwitcherTimer();
 	
-	void PlayBGBlendInAnimation();
-	void PlayBGBlendOutAnimation();
-	void StopBGBlendInAnimation();
-	void StopBGBlendOutAnimation();
+	//void PlayBGBlendInAnimation();
+	//void PlayBGBlendOutAnimation();
+	//void StopBGBlendInAnimation();
+	//void StopBGBlendOutAnimation();
 	 
 	virtual void NativeConstruct() override;
-	virtual void NativePreConstruct() override;
+	//virtual void NativePreConstruct() override;
 	
 	UFUNCTION()
 	void OnGameEnterBtnClick();
@@ -52,43 +53,54 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UImage* BGImage;
+	 
+	 //void OnGameEnterBtnClick();
 	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel")
-	TArray<UTexture2D*> BGTextures;
+	//void OnGameEneter();
+  public:
+  
+	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	//UTextBlock* HintText;
+	
+	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	//UImage* BGImage;
+	
+	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel")
+	//TArray<UTexture2D*> BGTextures;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton* GameEnterButton;
 	
-	UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
-	UWidgetAnimation* BGBlendOutAnimation;
+	//UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
+	//UWidgetAnimation* BGBlendOutAnimation;
 	
 	 
 	
 	//UGameEntryPanelWidget(const FObjectInitializer& ObjectInitializer)
 	 
 	
-	UFUNCTION()
-	void ChangeBGTextures();
+	 
+	//void ChangeBGTextures();
 	//virtual bool Initialize() override;
-	virtual void PanelInitialize() ;
+	//virtual void PanelInitialize() ;
 	
-	virtual void EnterPanel()  ;
-	virtual void LeavePanel() ;
+	//virtual void EnterPanel()  ;
+	//virtual void LeavePanel() ;
 	
 	//UI Input Event
-	virtual void OnConfirmInputPressed() ;
-	virtual void OnGoBackInputPressed(bool& bHandled)  ;
+//	virtual void OnConfirmInputPressed() ;
+//	virtual void OnGoBackInputPressed(bool& bHandled)  ;
 	  UFUNCTION()
-	void OnGameEnterButtonClicked();
+	 void OnGameEnterButtonClicked();
 	
 protected:
-	virtual void TickNative(const FGeometry& MyGeometry, float InDeltaTime) ;
+	//virtual void TickNative(const FGeometry& MyGeometry, float InDeltaTime) ;
 	
-	virtual void OnEnterPanel()  ;
-	virtual void OnLeavePanel() ;
+	//virtual void OnEnterPanel()  ;
+	//virtual void OnLeavePanel() ;
 	
-	virtual void RemoveFromParent() override;
+	//virtual void RemoveFromParent() override;
 	
-	virtual void NativeDestruct() override;
+	//virtual void NativeDestruct() override;
 	
 };

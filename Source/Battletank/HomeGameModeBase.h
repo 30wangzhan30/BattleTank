@@ -13,7 +13,10 @@ UCLASS()
 class BATTLETANK_API AHomeGameModeBase : public AGameModeBase
 {
 public:
-	virtual void BeginPlay() override;
 	GENERATED_BODY()
+	
+public:
+	
 	AHomeGameModeBase();
+	virtual void BeginPlay() override;
 };

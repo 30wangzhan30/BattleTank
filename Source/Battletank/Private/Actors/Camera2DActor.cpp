@@ -27,6 +27,8 @@ ACamera2DActor::ACamera2DActor()
 	Main2DCamera->SetProjectionMode(ECameraProjectionMode::Orthographic); // 纯正交（2D必选）
 	Main2DCamera->SetOrthoWidth(2500.0f); // 2D视口宽度（适配你的贴图尺寸）
 	Main2DCamera->SetRelativeLocation(FVector(0, 0, 0)); // 正交模式位置无需偏移
+	
+	
 }
 
 void ACamera2DActor::BeginPlay()
@@ -44,7 +46,8 @@ void ACamera2DActor::Tick(float DeltaTime)
 	if (TargetPawn && FollowSpeed > 0)
 	{
 		FVector TargetLocation = TargetPawn->GetActorLocation();
-		TargetLocation.Z = GetActorLocation().Z+200; // 固定Z轴
+		TargetLocation.Z = GetActorLocation().Z; // 固定Z轴
 		SetActorLocation(FMath::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, FollowSpeed));
+		
 	}
 }

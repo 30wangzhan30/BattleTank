@@ -5,6 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
+
+
+class UFloatingPawnMovement;
+class ATankController;
+struct FInputActionValue;
+
 UENUM(BlueprintType)
 enum class ETankDirection : uint8
 {
@@ -17,14 +23,36 @@ UCLASS()
 class BATTLETANK_API APlayerTank : public APawn
 {
 	GENERATED_BODY()
-
+	
+private:
+	int32 PlayerIndex; // 玩家索引
+	UPROPERTY(VisibleAnywhere,Category="TankSettings")
+	float RotationSpeed; // 旋转速度
+	
+	UPROPERTY(VisibleAnywhere,Category="TankSettings")
+	float MoveSpeed; // 移动速度
+	
+	//玩家2的移动处理
+	FVector CurrentVelocity; // 当前速度
+	float MaxVelocity;  // 最大速度
+	float Acceleration; // 加速度
+	float Deceleration; // 减速度
 public:
 	// Sets default values for this pawn's properties
 	APlayerTank();
-
+	// 设置玩家索引
+	void SetPlayerIndex(int32 Index) {PlayerIndex = Index;}; 
+	// 获取玩家索引
+	int32 GetPlayerIndex() const { return PlayerIndex; }
+	
+	void InitializeTankController(ATankController* TankController);
+	
 protected:
+	UPROPERTY(VisibleAnywhere)
+	UFloatingPawnMovement* TankMovementComponent;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 public:
 	// Called every frame
@@ -32,6 +60,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+    //处理移动输入
+	UFUNCTION()
+	void MoveInputHandler(const int32 InPlayerIndex,const FInputActionValue& Value);
 	//上下左右移动函数
 	void OnMoveRightPressed();
 	void OnMoveLeftPressed();
@@ -43,13 +75,16 @@ public:
 	
 	
 	void UpdateTankGridStartLocation();//更新初始位置
-	void  UpdateTankRotation();
+	void UpdateTankRotation();
 	void UpdateTankGridLocation();//更新坦克位置函数
 	//渲染序列帧动画的组件
-	class UPaperFlipbookComponent* RenderFlipbookComponent;
+	UPROPERTY(VisibleAnywhere, Category = "Render")
+	class UPaperFlipbookComponent* RenderTankComponent;
 	//资产
+	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class UPaperFlipbook* TankFlipbook;
 	//碰撞箱
+	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class USphereComponent * Sphere;
 	
 	

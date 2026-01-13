@@ -3,7 +3,7 @@
 
 #include "Pawn/StartPagePawn.h"
 #include "Components/WidgetComponent.h"
-
+#include "UI/MainUI.h"
 // Sets default values
 AStartPagePawn::AStartPagePawn()
 {
@@ -11,7 +11,7 @@ AStartPagePawn::AStartPagePawn()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	
-	TankWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("TankWidgetComponent"));
+	 
 	// 将Widget组件挂载到根组件（如果根组件为空，设为根组件）
 	if (!RootComponent)
 	{
@@ -19,12 +19,12 @@ AStartPagePawn::AStartPagePawn()
 	}
 	else
 	{
-		TankWidgetComponent->SetupAttachment(RootComponent);
+	//	TankWidgetComponent->SetupAttachment(RootComponent);
 	}
 
  
-	TankWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间（UI跟随屏幕，不是世界空间）
-	TankWidgetComponent->SetDrawSize(FVector2D(800, 600));    // Widget显示大小（宽800，高600）
+//	TankWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间（UI跟随屏幕，不是世界空间）
+//	TankWidgetComponent->SetDrawSize(FVector2D(800, 600));    // Widget显示大小（宽800，高600）
 	//TankWidgetComponent->SetVisibility(false);                // 初始隐藏，按需显示
  
 }

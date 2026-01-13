@@ -17,16 +17,9 @@ void UMainUI ::NativeConstruct()
 		GameEnterButton->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
 	}
 	 
-	else
-	{
-		 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT(" GameEnterButton绑定失败！请检查蓝图中控件名是否一致！"));
-	}
 }
 
-// 按钮点击的测试函数（核心测试逻辑）
-void UMainUI ::OnGameEnterButtonClicked()
-{
-	 
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT(" 开始游戏按钮点击成功！"));
-	}
+ 
+ void UMainUI::OnGameEnterButtonClicked() 
+{   UE_LOG(LogTemp, Warning, TEXT("游戏进入按钮点击事件触发"));
+ 	}
