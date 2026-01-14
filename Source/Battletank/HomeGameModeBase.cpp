@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
 #include "HomeGameModeBase.h"
 #include "Public/Actors/BackGround.h"
-
 #include "Pawn/PlayerTank.h"
-#include "Pawn/StartPagePawn.h"
 #include "Actors/Camera2DActor.h"
 #include "Actors/TankBullet.h"
-#include "HomeGameModeBase.h"
+ 
  AHomeGameModeBase ::AHomeGameModeBase()
 {
  	 DefaultPawnClass = APlayerTank::StaticClass();
