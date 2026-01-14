@@ -2,6 +2,17 @@
 
 
 #include "GameStateBase/PlayerTankStateBase.h"
+
+void APlayerTankStateBase::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void APlayerTankStateBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 APlayerTankStateBase::APlayerTankStateBase ()
 {
 	

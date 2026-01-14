@@ -51,7 +51,7 @@ void APlayerTank::BeginPlay()
 // Called every frame
 void APlayerTank::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime); 
+	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
