@@ -8,9 +8,10 @@ public class Battletank : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Paper2D", "UMG", "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG",  "UMGEditor","Slate",        // 补充：UMG的底层渲染依赖
+			"SlateCore", "Paper2D" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "UMGEditor" });
 
 		// Uncomment if you are using Slate UI
 		 PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

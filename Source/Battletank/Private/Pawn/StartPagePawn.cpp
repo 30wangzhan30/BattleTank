@@ -3,7 +3,7 @@
 
 #include "Pawn/StartPagePawn.h"
 
-#include "WidgetBlueprint.h"
+ 
 #include "UObject/ConstructorHelpers.h"
 #include "Components/WidgetComponent.h"
  

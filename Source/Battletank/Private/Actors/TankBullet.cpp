@@ -2,10 +2,10 @@
 
 
 #include "Actors/TankBullet.h"
-#include "Pawn/PlayerTank.h"
+ 
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
-#include "PaperSprite.h"  
+  
 #include "Battletank/HomeGameModeBase.h"
 #include "Components/SphereComponent.h"
  
