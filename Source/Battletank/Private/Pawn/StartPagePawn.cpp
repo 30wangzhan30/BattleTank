@@ -2,30 +2,26 @@
 
 
 #include "Pawn/StartPagePawn.h"
+
+ 
+#include "UObject/ConstructorHelpers.h"
 #include "Components/WidgetComponent.h"
+ 
 #include "UI/MainUI.h"
+ 
 // Sets default values
 AStartPagePawn::AStartPagePawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-	
-	 
-	// 将Widget组件挂载到根组件（如果根组件为空，设为根组件）
-	if (!RootComponent)
-	{
-		RootComponent = TankWidgetComponent;
-	}
-	else
-	{
-	//	TankWidgetComponent->SetupAttachment(RootComponent);
-	}
+	static ConstructorHelpers::FClassFinder<UMainUI> WidgetFinder(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'"));
+	 	TargetWidgetClass =WidgetFinder.Class;
+	TankWidgetComponent =  CreateWidget<UMainUI>(GetWorld(), TargetWidgetClass);;
 
- 
-//	TankWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间（UI跟随屏幕，不是世界空间）
-//	TankWidgetComponent->SetDrawSize(FVector2D(800, 600));    // Widget显示大小（宽800，高600）
-	//TankWidgetComponent->SetVisibility(false);                // 初始隐藏，按需显示
+	 
+	 
+		 
+	 
  
 }
 
@@ -33,7 +29,7 @@ AStartPagePawn::AStartPagePawn()
 void AStartPagePawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	TankWidgetComponent->AddToViewport();
 }
 
 // Called every frame

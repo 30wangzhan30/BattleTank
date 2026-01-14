@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UI/MainUI.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Pawn.h"
 #include "StartPagePawn.generated.h"
@@ -26,7 +27,7 @@ public:
 	
 	// 声明Widget组件（用于承载UI的核心组件）
 	UPROPERTY(VisibleAnywhere, Category = "UI Widget")
-	UWidgetComponent* TankWidgetComponent;
+	UMainUI* TankWidgetComponent;
 
 	// 要加载的Widget蓝图类（在蓝图中指定，比如你的GameEnterPanel）
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
