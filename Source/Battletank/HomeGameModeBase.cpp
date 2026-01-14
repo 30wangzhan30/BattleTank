@@ -13,6 +13,20 @@ AHomeGameModeBase ::AHomeGameModeBase()
  	DefaultPawnClass = AStartPagePawn::StaticClass();
  	PlayerControllerClass = ATankController::StaticClass();
 }
+
+void AHomeGameModeBase::Addinitilize()
+{
+}
+
+void AHomeGameModeBase::AddBulletActor(ATankBullet* BulletActor)
+{
+}
+
+ATankBullet* AHomeGameModeBase::GetBulletObject()
+{
+	return nullptr;
+}
+
 void AHomeGameModeBase::BeginPlay()
  {
 	 //加载瓦片地图（测试）  //调了一下生成的位置，对不准相机？

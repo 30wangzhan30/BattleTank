@@ -194,6 +194,10 @@ void APlayerTank::OnMoveDownPressed( )
 	UpdateTankGridLocation();
 }
 
+void APlayerTank::Onshoot()
+{
+}
+
 void APlayerTank::PressedFunction()
 {
 }
@@ -216,6 +220,10 @@ void APlayerTank::UpdateTankGridLocation()
 
 	// 瞬移到目标格子
   SetActorLocation(TargetPos);
+}
+
+void APlayerTank::SpawnBulletActor()
+{
 }
 
 

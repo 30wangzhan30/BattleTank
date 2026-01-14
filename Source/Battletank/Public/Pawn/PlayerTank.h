@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HomeGameModeBase.generated.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
 
