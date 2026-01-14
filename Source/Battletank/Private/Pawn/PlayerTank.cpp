@@ -2,10 +2,13 @@
 
 
 #include "Pawn/PlayerTank.h"
+ 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
+#include "Actors/TankBullet.h"
+#include "Battletank/HomeGameModeBase.h"
 #include "Components/SphereComponent.h"
 // Sets default values
 APlayerTank::APlayerTank()
@@ -18,7 +21,9 @@ APlayerTank::APlayerTank()
 	RenderFlipbookComponent->SetCollisionProfileName(TEXT("BlockAll"));
 	 
 	
-	
+	BulletSpawnPosition= CreateDefaultSubobject<USceneComponent>("BulletSpawnPosition");
+	BulletSpawnPosition->SetupAttachment(RenderFlipbookComponent);
+	//BulletSpawnPosition->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	
 	
 }
@@ -29,7 +34,7 @@ void APlayerTank::BeginPlay()
 	Super::BeginPlay();
 	UpdateTankGridLocation();
 	
-	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
+	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/Player3.Player3'"));
  
 	if (RenderFlipbookComponent && TankFlipbook)
 	{
@@ -46,7 +51,7 @@ void APlayerTank::BeginPlay()
 // Called every frame
 void APlayerTank::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime); 
 }
 
 // Called to bind functionality to input
@@ -62,8 +67,14 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("MoveLeft", IE_Pressed, this, &APlayerTank::OnMoveLeftPressed);
 	PlayerInputComponent->BindAction("MoveUp", IE_Pressed, this, &APlayerTank::OnMoveUpPressed);
 	PlayerInputComponent->BindAction("MoveDown", IE_Pressed, this, &APlayerTank::OnMoveDownPressed);
+	PlayerInputComponent->BindAction("shoot", IE_Pressed, this, &APlayerTank::Onshoot);
 	 
 }
+
+
+
+
+
 //想要实现计算瓦片地图每个格子的位置然后SetRelativeLocation到将要移动到的位置
 void APlayerTank::OnMoveRightPressed( )
 {
@@ -149,3 +160,33 @@ void  APlayerTank::UpdateTankRotation()
 
 
 //子弹逻辑
+void APlayerTank::Onshoot()
+{
+	SpawnBulletActor();
+	
+}
+
+
+void  APlayerTank::SpawnBulletActor()
+{
+	// GetWorld()->SpawnActor<ABulletActor>(ABulletActor::StaticClass(),);
+  UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
+	 //ATankBullet* Bullet = GetWorld()->SpawnActor<ATankBullet>(BulletClass, BulletSpawnPosition->GetComponentLocation(), FRotator::ZeroRotator);
+	//Bullet->SetBirdPawnOwner(this);
+	
+	AHomeGameModeBase* HomeGameMode = Cast<AHomeGameModeBase>(GetWorld()->GetAuthGameMode());//获取homegamemode
+	ATankBullet* Bullet = HomeGameMode->GetBulletObject();//调用从对象池获取子弹函数
+	if (!Bullet)
+	{ 
+		//代表没有从子弹对象池中获取到子弹（ ）
+		Bullet = GetWorld()->SpawnActor<ATankBullet>(BulletClass, BulletSpawnPosition->GetComponentLocation(), FRotator::ZeroRotator);
+	}
+	else
+	{
+		//Bullet->SetActorLocation(BulletSpawnPosition->GetComponentLocation());
+		
+    }FVector PlayerForwardDir = this->GetActorForwardVector(); 
+     	// 将玩家朝向设为子弹的飞行方向
+     	Bullet->SetBulletMoveDirection(PlayerForwardDir); 
+	 
+}

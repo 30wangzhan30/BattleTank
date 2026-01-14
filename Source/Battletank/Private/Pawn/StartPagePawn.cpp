@@ -23,9 +23,7 @@ AStartPagePawn::AStartPagePawn()
 	}
 
  
-	TankWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间（UI跟随屏幕，不是世界空间）
-	TankWidgetComponent->SetDrawSize(FVector2D(800, 600));    // Widget显示大小（宽800，高600）
-	//TankWidgetComponent->SetVisibility(false);                // 初始隐藏，按需显示
+	 
  
 }
 
