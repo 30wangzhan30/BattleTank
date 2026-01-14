@@ -44,19 +44,6 @@ void AHomeGameModeBase::BeginPlay()
 			 FRotator(0, 0, 0)
 		 );
  	}
-
- 	// Spawn独立摄像机
- 	ACamera2DActor* CameraActor = GetWorld()->SpawnActor<ACamera2DActor>(
-		 ACamera2DActor::StaticClass(),
-		 Tank->GetActorLocation() + FVector(0, 0, 200.0f),
-		 FRotator(0, 0, 0)
-	 );
-    
- 	 
- 	PC->SetViewTargetWithBlend(CameraActor, 0.0f);
- 	 
- 		 
-		 
 	TankController->Possess(Tank1);
 	Tank1 -> SetPlayerIndex(0);
 	Tank1 -> InitializeTankController(TankController);

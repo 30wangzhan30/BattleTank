@@ -43,16 +43,6 @@ private:
 	virtual void NativeConstruct() override;
 	//virtual void NativePreConstruct() override;
 	
-	UFUNCTION()
-	void OnGameEnterBtnClick();
-	
-	void OnGameEneter();
-public:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UTextBlock* HintText;
-	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UImage* BGImage;
 	 
 	 //void OnGameEnterBtnClick();
 	
