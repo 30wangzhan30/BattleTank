@@ -15,9 +15,9 @@ AStartPagePawn::AStartPagePawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	static ConstructorHelpers::FClassFinder<UMainUI> WidgetFinder(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'"));
-	 
-	TankWidgetComponent = Cast<UMainUI>(this->GetComponentByClass(UMainUI::StaticClass()));
-	TargetWidgetClass =WidgetFinder.Class;
+	 	TargetWidgetClass =WidgetFinder.Class;
+	TankWidgetComponent =  CreateWidget<UMainUI>(GetWorld(), TargetWidgetClass);;
+
 	 
 	 
 		 

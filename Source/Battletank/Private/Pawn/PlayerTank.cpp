@@ -34,7 +34,7 @@ void APlayerTank::BeginPlay()
 	Super::BeginPlay();
 	UpdateTankGridLocation();
 	
-	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/Player3.Player3'"));
+	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
  
 	if (RenderFlipbookComponent && TankFlipbook)
 	{
