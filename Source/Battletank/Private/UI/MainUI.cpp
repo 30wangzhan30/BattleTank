@@ -12,9 +12,9 @@ void UMainUI ::NativeConstruct()
 	Super::NativeConstruct();
 
 	 
-	if (GameEnterButton)
+	if (PlayerSingle)
 	{ // 绑定"按下时"的事件
-		GameEnterButton->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
+		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
 	}
 	 
 	else

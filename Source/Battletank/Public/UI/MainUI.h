@@ -59,7 +59,7 @@ private:
 	//TArray<UTexture2D*> BGTextures;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UButton* GameEnterButton;
+	UButton* PlayerSingle;
 	
 	//UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
 	//UWidgetAnimation* BGBlendOutAnimation;

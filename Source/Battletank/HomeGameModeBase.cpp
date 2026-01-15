@@ -6,12 +6,14 @@
 #include "Pawn/PlayerTank.h"
 #include "Actors/Camera2DActor.h"
 #include "Actors/TankBullet.h"
- 
- AHomeGameModeBase ::AHomeGameModeBase()
+#include "Pawn/PlayerHud.h"
+#include "Pawn/Startpagecontrol.h"
+AHomeGameModeBase ::AHomeGameModeBase()
 {
- 	 DefaultPawnClass = APlayerTank::StaticClass();
- 	 
- 	//DefaultPawnClass = AStartPagePawn::StaticClass();
+ 	// DefaultPawnClass = APlayerTank::StaticClass();
+	DefaultPawnClass = AStartpagecontrol::StaticClass();
+ 	 GameStateClass = APlayerHud::StaticClass();
+ 	 HUDClass = APlayerHud::StaticClass();
 }
 void AHomeGameModeBase::BeginPlay()
  {
