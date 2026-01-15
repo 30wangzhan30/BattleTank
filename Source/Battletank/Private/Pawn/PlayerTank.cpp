@@ -56,7 +56,7 @@ void APlayerTank::InitializeTankController(ATankController* TankController)
 		}
 	}
 }
-
+ 
 // Called when the game starts or when spawned
 void APlayerTank::BeginPlay()
 { 

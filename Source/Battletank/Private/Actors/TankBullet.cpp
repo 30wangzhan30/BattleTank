@@ -8,7 +8,8 @@
   
 #include "Battletank/HomeGameModeBase.h"
 #include "Components/SphereComponent.h"
- 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ATankBullet::ATankBullet()
 {
@@ -38,6 +39,8 @@ void ATankBullet::BeginPlay()
 	 RenderBulletComponent->SetFlipbook(NormalBulletFlipbook);
 	 RenderBulletComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	  BulletCollision->OnComponentBeginOverlap.AddDynamic(this, &ATankBullet::OnComponentBeginOverlapEvent);
+	
+	 HomeGameMode = Cast<AHomeGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called every frame
