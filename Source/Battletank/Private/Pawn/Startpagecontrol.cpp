@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "Pawn/Startpagecontrol.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
-#include "Pawn/Startpagecontrol.h"
+
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -46,36 +46,63 @@ void AStartpagecontrol::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	
-	FVector2D MouseScreenPos;
-	PC->GetMousePosition(MouseScreenPos.X, MouseScreenPos.Y);
+	if (!PC)
+	{
+		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (!PC) return;
+	}
 
-	// 2. 屏幕坐标转世界坐标（让Actor跟随）
+	//  获取鼠标屏幕坐标
+	FVector2D MouseScreenPos;
+	if (!PC->GetMousePosition(MouseScreenPos.X, MouseScreenPos.Y))
+	{
+		return;
+	}
+
+	//  屏幕坐标转世界坐标 
 	FVector WorldPos;
 	FVector WorldDir;
-	PC->DeprojectScreenPositionToWorld(MouseScreenPos.X, MouseScreenPos.Y, WorldPos, WorldDir);
+	if (!PC->DeprojectScreenPositionToWorld(MouseScreenPos.X, MouseScreenPos.Y, WorldPos, WorldDir))
+	{
+		return;
+	}
+	WorldPos.Z = 0;
 
-	// 3. 让挂载该组件的Actor跟随鼠标移动
+	// 3. 获取坦克当前位置 
 	FVector ActorPos = this->GetActorLocation();
-	ActorPos.X = WorldPos.X;
-	ActorPos.Y = WorldPos.Y; 
-	//this->SetActorLocation(ActorPos);
-	
 	 
-	FVector MouseWorldPos;
-	//  计算坦克到鼠标的方向向量 + 目标角度
-	FVector DirectionToMouse = (MouseWorldPos - ActorPos).GetSafeNormal(); // 归一化方向向量
-	FRotator TargetRot = UKismetMathLibrary::MakeRotFromX(DirectionToMouse); // 从方向向量生成旋转角
-	
-	float TankRotateSpeed=50;
-	float TankMoveSpeed=50;
 	 
-	
-	FRotator CurrentRot=this->GetActorRotation();
+	//this->SetActorLocation(ActorPos); 
+	 
+	 
+
+	//  计算方向+转向 
+	FVector DirectionToMouse = (WorldPos - ActorPos).GetSafeNormal();
+	FRotator TargetRot = UKismetMathLibrary::MakeRotFromX(DirectionToMouse);
+	if (DirectionToMouse.IsNearlyZero())
+	{
+		DirectionToMouse = FVector(100, 0, 0); //  
+	}
+	DirectionToMouse.Normalize();
+	// 调整速度 
+	float TankRotateSpeed = 3.0f;    
+	float TankMoveSpeed = 100.0f;    
+
+	// 平滑转向
+	FRotator CurrentRot = this->GetActorRotation();
 	FRotator NewRot = FMath::RInterpTo(CurrentRot, TargetRot, DeltaTime, TankRotateSpeed);
-	this->SetActorRotation(NewRot);
-	FVector MoveDelta = NewRot.Vector() * TankMoveSpeed * DeltaTime; // 按朝向和速度移动
-	this->SetActorLocation(MoveDelta);
-	
+	 
+	   this->SetActorRotation(NewRot);
+
+	// 计算移动增量
+	FVector MoveDelta = DirectionToMouse  * TankMoveSpeed * DeltaTime;
+	FVector NewActorPos = ActorPos + MoveDelta;
+
+  
+
+	//  设置新位置 
+	 this->SetActorLocation(NewActorPos);
+ 
 	
 }
 

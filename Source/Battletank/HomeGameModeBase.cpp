@@ -6,13 +6,14 @@
 #include "Pawn/PlayerTank.h"
 #include "Actors/Camera2DActor.h"
 #include "Actors/TankBullet.h"
+#include "GameStateBase/PlayerTankStateBase.h"
 #include "Pawn/PlayerHud.h"
 #include "Pawn/Startpagecontrol.h"
 AHomeGameModeBase ::AHomeGameModeBase()
 {
  	// DefaultPawnClass = APlayerTank::StaticClass();
 	DefaultPawnClass = AStartpagecontrol::StaticClass();
- 	 GameStateClass = APlayerHud::StaticClass();
+ 	 GameStateClass = APlayerTankStateBase::StaticClass();
  	 HUDClass = APlayerHud::StaticClass();
 }
 void AHomeGameModeBase::BeginPlay()
@@ -53,7 +54,7 @@ void AHomeGameModeBase::BeginPlay()
  	}
 // 初始化5个子弹，放进池子里
 void AHomeGameModeBase::Addinitilize()
- {
+ {  
 	 for (int i=0;i<MaxBulletCount;i++)
 	 {
 	 	UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
