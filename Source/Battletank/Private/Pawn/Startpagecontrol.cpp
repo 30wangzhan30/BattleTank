@@ -2,8 +2,7 @@
 #include "Pawn/Startpagecontrol.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
-
-
+ 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -33,8 +32,12 @@ void AStartpagecontrol::BeginPlay()
 		// 3. 调整坦克大小（鼠标样式要小）
 		RenderFlipbookComponent->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 		 ;
-		
-		
+		 
+        
+		 
+
+		 
+		 
 		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	}
@@ -89,22 +92,45 @@ void AStartpagecontrol::Tick(float DeltaTime)
 	float TankMoveSpeed = 100.0f;    
 
 	// 平滑转向
-	FRotator CurrentRot = this->GetActorRotation();
-	FRotator NewRot = FMath::RInterpTo(CurrentRot, TargetRot, DeltaTime, TankRotateSpeed);
 	 
-	   this->SetActorRotation(NewRot);
+	 
+	TargetRot.Pitch = 0.0f;
+	TargetRot.Roll =  0.0f;
+	 
+	 
+	FRotator TargetRotation = FRotator( TargetRot );
+	if (TargetRotation.Yaw < 0)
+		TargetRotation.Yaw += 360.0f;
+	FRotator Rotation =this->GetActorRotation();
+	if (Rotation.Yaw < 0)
+		Rotation.Yaw += 360.0f;
+	if (!FMath::IsNearlyEqual(TargetRotation.Yaw,Rotation.Yaw))
+	{
+		 
+			this -> SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 90.0f));
+		 
+			 
+			 
+			
+			//this->AddActorLocalRotation(FRotator(0.0f, RotationDelta, 0.0f));
+		 
+	}
+	  
 
-	// 计算移动增量
-	FVector MoveDelta = DirectionToMouse  * TankMoveSpeed * DeltaTime;
-	FVector NewActorPos = ActorPos + MoveDelta;
+			// 计算移动增量
+			FVector MoveDelta = DirectionToMouse  * TankMoveSpeed * DeltaTime;
+			MoveDelta.Z = 0.0f; // 
+			FVector NewActorPos = ActorPos + MoveDelta;
 
   
 
-	//  设置新位置 
-	 this->SetActorLocation(NewActorPos);
+			//  设置新位置 
+			this->SetActorLocation(NewActorPos);
  
 	
-}
+		}
+	 
+	 
 
 // Called to bind functionality to input
 void AStartpagecontrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

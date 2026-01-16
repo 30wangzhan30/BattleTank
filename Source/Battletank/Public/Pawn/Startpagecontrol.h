@@ -20,6 +20,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY (EditAnywhere, BlueprintReadWrite)
 	class UPaperFlipbookComponent* RenderFlipbookComponent;
 	class UPaperFlipbook* TankFlipbookMouse;  
 	APlayerController* PC;
