@@ -22,7 +22,7 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank2FireInputDelegate, const int32,cons
 
 
 /**
- * 
+ * fryrd
  */
 UCLASS()
 class BATTLETANK_API ATankController : public APlayerController
