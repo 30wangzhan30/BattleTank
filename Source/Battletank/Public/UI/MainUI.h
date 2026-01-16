@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+
 #include "MainUI.generated.h"
 
  
@@ -20,10 +21,8 @@ struct FTimerHandle;
   UCLASS()	
 class BATTLETANK_API UMainUI : public UUserWidget
   {
-  	GENERATED_BODY() // 必须在类内第一行
-
-  	// 类成员...
- 
+	  GENERATED_BODY()
+  
 private:
 	TArray<FWidgetAnimationDynamicEvent> StoredAnimationDelegates;
 	
@@ -59,7 +58,7 @@ private:
 	//TArray<UTexture2D*> BGTextures;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UButton* GameEnterButton;
+	UButton* PlayerSingle;
 	
 	//UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
 	//UWidgetAnimation* BGBlendOutAnimation;

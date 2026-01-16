@@ -23,6 +23,49 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	 
+	 
+
+	public:
+		 
+		 
+
+		// 渲染资产的组件 (RenderBulletComponent)
+		UPROPERTY(VisibleAnywhere, Category="BulletActor|Components")
+		class UPaperFlipbookComponent* RenderBulletComponent;
+
+		// 资产 BulletFlipbook
+		UPROPERTY(EditAnywhere, Category="BulletActor|Flipbook")
+		class UPaperFlipbook* NormalBulletFlipbook;
+		UPROPERTY(EditAnywhere, Category="BulletActor|Flipbook")
+		UPaperFlipbook* HitBulletFlipbook;
+
+		// 响应重叠事件的触发器组件（BulletCollision：碰撞预设为OverlapAll/半径比资产的宽
+		// 游戏测试阶段开始游戏不要隐藏/绑定代理通知）
+		UPROPERTY(VisibleAnywhere, Category="BulletActor|Components")
+		class USphereComponent* BulletCollision;
+
+		UFUNCTION()
+		void OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent,
+										   AActor* OtherActor,
+										   UPrimitiveComponent* OtherComp,
+										   int32 OtherBodyIndex,
+										   bool bFromSweep,
+										   const FHitResult& SweepResult);
+	 
+	void BulletDestroy();
+	UPROPERTY()
+	class AHomeGameModeBase* HomeGameMode;
+	//class   APlayerTank* TankPawnOwner;
+	//void SetTankPawnOwner( APlayerTank* NewBirdPawn);
+
+	void BulletMove(float DeltaTime);
+	UPROPERTY()
+	float BulletMoveSpeed = 300.f;
+	UPROPERTY()
+	FVector BulletMoveDirection;
+	 void SetBulletMoveDirection(FVector NewDirection);
+	
 	
 	
 	UPROPERTY(VisibleAnywhere, Category = "Bullet|Collision")
@@ -54,6 +97,6 @@ private:
 	float LifeTimer = 0.0f;
 
 	// 碰撞回调函数
-	//UFUNCTION()
-	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

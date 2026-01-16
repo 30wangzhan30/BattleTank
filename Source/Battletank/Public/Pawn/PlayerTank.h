@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HomeGameModeBase.generated.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
 UENUM(BlueprintType)
@@ -37,6 +38,8 @@ public:
 	void OnMoveLeftPressed();
 	void OnMoveUpPressed();
 	void OnMoveDownPressed();
+	
+	void Onshoot();
 	//
 	void  PressedFunction();
 	void ReleasedFunction();
@@ -52,7 +55,13 @@ public:
 	//碰撞箱
 	class USphereComponent * Sphere;
 	
+	//子弹生成
+	void SpawnBulletActor();
+	USceneComponent* BulletSpawnPosition;
 	
+	//子弹对象池
+	UPROPERTY()
+	class AHomeGameModeBase* homebase;
 	
 	UPROPERTY(EditAnywhere, Category = "Grid Move")
 	float GridStep = 32.0f; // 地图格子步长 

@@ -29,7 +29,6 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
 	 
     
 	 
-	 
     float GameSpeed; 
     
     EGameState CurrentGameState;
