@@ -12,7 +12,7 @@ void Utankui::NativeConstruct()
 	Super::NativeConstruct();
 		
 	// 可选：设置UI位置/大小 
-	this->SetRenderTranslation(FVector2D(500, 300)); // 屏幕中心位置
+	 
 	this->SetRenderScale(FVector2D( 0.03,0.07)) ;
 }
 
@@ -40,14 +40,15 @@ void Utankui::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	{
 		return;
 	}
-	WorldPos.Z = 0;
+ 
 
 	// 3. 获取坦克当前位置 
 	//FVector ActorPos = this->GetActorLocation();
 	 
 	FVector  ActorPos =  FVector(this->GetRenderTransform().Translation,0);
+	 
+	 
 	//this->SetActorLocation(ActorPos); 
-	 this->SetRenderTransform;
 	 
 
 	//  计算方向+转向 
@@ -98,5 +99,6 @@ void Utankui::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		 
  //this->SetActorLocation(NewActorPos);
 	 
+	this->SetRenderTranslation (FVector2D (NewActorPos.X, NewActorPos.Y));
 }
  
