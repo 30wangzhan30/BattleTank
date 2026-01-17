@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "tankui.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
@@ -47,7 +48,7 @@ private:
 	
 	//void OnGameEneter();
   public:
-  
+  	 
 	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	//UTextBlock* HintText;
 	
@@ -60,8 +61,8 @@ private:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton* PlayerSingle;
 	
-	//UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
-	//UWidgetAnimation* BGBlendOutAnimation;
+	UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
+	UWidgetAnimation* MainImage_1;
 	
 	 
 	

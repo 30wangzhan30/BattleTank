@@ -5,21 +5,27 @@
 
 #include "Components/Button.h"
 #include "Engine/Engine.h"
+#include "UI/tankui.h"
 
 void UMainUI ::NativeConstruct()
 {
 	 
 	Super::NativeConstruct();
-
-	 
+ 
 	if (PlayerSingle)
 	{ // 绑定"按下时"的事件
 		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
+		
+	 
+	
 	}
 	 
 }
 
  
- void UMainUI::OnGameEnterButtonClicked() 
-{   UE_LOG(LogTemp, Warning, TEXT("游戏进入按钮点击事件触发"));
- 	}
+ void UMainUI::OnGameEnterButtonClicked()
+{     // Utankui*uitank =Cast<Utankui>(Widget 
+//float pos=	PlayerSingle->GetRenderTransform().Translation.X;
+		//uitank.SetRenderTranslation( FVector2D(pos,PlayerSingle->GetRenderTransform().Translation.Y));
+	this->SetVisibility(ESlateVisibility::Hidden);
+}
