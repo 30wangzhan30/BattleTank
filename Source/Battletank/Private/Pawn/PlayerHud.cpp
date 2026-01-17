@@ -24,7 +24,7 @@ void APlayerHud::BeginPlay()
 	Super::BeginPlay();
 	CreateWidgetInstance();
 	if (TankWidgetComponent)
-	{
+	{     
 			 TankWidgetComponent->AddToViewport();
 	}
 

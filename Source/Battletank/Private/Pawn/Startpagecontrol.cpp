@@ -2,9 +2,11 @@
 #include "Pawn/Startpagecontrol.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
- 
+#include "Blueprint/UserWidget.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/tankui.h"
 
 // Sets default values
 AStartpagecontrol::AStartpagecontrol()
@@ -12,10 +14,11 @@ AStartpagecontrol::AStartpagecontrol()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	RenderFlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("RenderFlipbookComponent"));
-	RootComponent = RenderFlipbookComponent; // 设置为根组件，确保显示
-	TankFlipbookMouse = CreateDefaultSubobject<UPaperFlipbook>(TEXT("TankFlipbook"));
-	
+	// RenderFlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("RenderFlipbookComponent"));
+	// RootComponent = RenderFlipbookComponent; // 设置为根组件，确保显示
+	// TankFlipbookMouse = CreateDefaultSubobject<UPaperFlipbook>(TEXT("TankFlipbook"));
+	 TankAnimationWidget = nullptr;
+	 TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/Mytankui.Mytankui_C'")); ;
 }
 
 // Called when the game starts or when spawned
@@ -23,110 +26,38 @@ void AStartpagecontrol::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	TankFlipbookMouse=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
- 
-	if ( TankFlipbookMouse)
-	{
-		RenderFlipbookComponent->SetFlipbook(TankFlipbookMouse);
-		RenderFlipbookComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
-		// 3. 调整坦克大小（鼠标样式要小）
-		RenderFlipbookComponent->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
-		 ;
-		 
-        
-		 
+	// TankFlipbookMouse=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
+	//
+	// if ( TankFlipbookMouse)
+	// {
+	// 	RenderFlipbookComponent->SetFlipbook(TankFlipbookMouse);
+	// 	RenderFlipbookComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
+	// 	// 3. 调整坦克大小（鼠标样式要小）
+	// 	RenderFlipbookComponent->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	;
+	TankAnimationWidget = CreateWidget<UUserWidget>(GetWorld(), TankAnimationWidgetClass);
+	if (TankAnimationWidget)
+	{  
+		// 添加到视口（和你的开始游戏UI同层）
+		TankAnimationWidget->AddToViewport();
+	 
+	}
+
 
 		 
 		 
-		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	 
 
 	}
-}
+ 
 
 // Called every frame
 void AStartpagecontrol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	
-	if (!PC)
-	{
-		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (!PC) return;
-	}
-
-	//  获取鼠标屏幕坐标
-	FVector2D MouseScreenPos;
-	if (!PC->GetMousePosition(MouseScreenPos.X, MouseScreenPos.Y))
-	{
-		return;
-	}
-
-	//  屏幕坐标转世界坐标 
-	FVector WorldPos;
-	FVector WorldDir;
-	if (!PC->DeprojectScreenPositionToWorld(MouseScreenPos.X, MouseScreenPos.Y, WorldPos, WorldDir))
-	{
-		return;
-	}
-	WorldPos.Z = 0;
-
-	// 3. 获取坦克当前位置 
-	FVector ActorPos = this->GetActorLocation();
 	 
 	 
-	//this->SetActorLocation(ActorPos); 
-	 
-	 
-
-	//  计算方向+转向 
-	FVector DirectionToMouse = (WorldPos - ActorPos).GetSafeNormal();
-	FRotator TargetRot = UKismetMathLibrary::MakeRotFromX(DirectionToMouse);
-	if (DirectionToMouse.IsNearlyZero())
-	{
-		DirectionToMouse = FVector(100, 0, 0); //  
-	}
-	DirectionToMouse.Normalize();
-	// 调整速度 
-	float TankRotateSpeed = 3.0f;    
-	float TankMoveSpeed = 100.0f;    
-
-	// 平滑转向
-	 
-	 
-	TargetRot.Pitch = 0.0f;
-	TargetRot.Roll =  0.0f;
-	 
-	 
-	FRotator TargetRotation = FRotator( TargetRot );
-	if (TargetRotation.Yaw < 0)
-		TargetRotation.Yaw += 360.0f;
-	FRotator Rotation =this->GetActorRotation();
-	if (Rotation.Yaw < 0)
-		Rotation.Yaw += 360.0f;
-	if (!FMath::IsNearlyEqual(TargetRotation.Yaw,Rotation.Yaw))
-	{
-		 
-			this -> SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 90.0f));
-		 
-			 
-			 
-			
-			//this->AddActorLocalRotation(FRotator(0.0f, RotationDelta, 0.0f));
-		 
-	}
-	  
-
-			// 计算移动增量
-			FVector MoveDelta = DirectionToMouse  * TankMoveSpeed * DeltaTime;
-			MoveDelta.Z = 0.0f; // 
-			FVector NewActorPos = ActorPos + MoveDelta;
-
-  
-
-			//  设置新位置 
-			this->SetActorLocation(NewActorPos);
- 
 	
 		}
 	 

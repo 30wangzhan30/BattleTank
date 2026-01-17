@@ -20,10 +20,19 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY (EditAnywhere, BlueprintReadWrite)
-	class UPaperFlipbookComponent* RenderFlipbookComponent;
-	class UPaperFlipbook* TankFlipbookMouse;  
-	APlayerController* PC;
+ 
+	
+	
+	 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UUserWidget* TankAnimationWidget;
+
+	 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> TankAnimationWidgetClass;
+	//class UPaperFlipbookComponent* RenderFlipbookComponent;
+	//class UPaperFlipbook* TankFlipbookMouse;  
+	 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
