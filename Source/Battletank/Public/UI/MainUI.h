@@ -62,7 +62,7 @@ private:
 	UButton* PlayerSingle;
 	
 	UPROPERTY(Transient,EditDefaultsOnly,blueprintReadWrite,Category = "GameEnterPanel|Animations",meta = (BindWidgetAnim))
-	UWidgetAnimation* MainImage_1;
+	UWidgetAnimation* animationstart;
 	
 	 
 	

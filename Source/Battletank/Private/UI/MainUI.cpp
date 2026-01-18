@@ -3,20 +3,25 @@
 
 #include "UI/MainUI.h"
 
+
+#include "EditorFontGlyphs.h"
+#include "Animation/WidgetAnimation.h"
+ 
 #include "Components/Button.h"
 #include "Engine/Engine.h"
 #include "UI/tankui.h"
-
+ 
 void UMainUI ::NativeConstruct()
 {
 	 
 	Super::NativeConstruct();
  
+	PlayAnimation(animationstart); 
 	if (PlayerSingle)
 	{ // 绑定"按下时"的事件
 		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
 		
-	 
+	  
 	
 	}
 	 

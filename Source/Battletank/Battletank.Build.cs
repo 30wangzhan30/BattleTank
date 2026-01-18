@@ -10,7 +10,7 @@ public class Battletank : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Paper2D", "UMG", "Slate", "SlateCore" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle", "EditorStyle", "EditorStyle", "EditorStyle", "EditorStyle", "AnimGraphRuntime"  });
 
 		// Uncomment if you are using Slate UI
 		 PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
