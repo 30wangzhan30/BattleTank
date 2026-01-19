@@ -34,7 +34,8 @@ private:
   //如果有玩家2，total=1+2,没有就是单个
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_TotalScore;
-
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* StageNum;
 	// 分项得分文本
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_ScoreItem1;

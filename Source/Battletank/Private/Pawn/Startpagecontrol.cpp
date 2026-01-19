@@ -11,12 +11,10 @@
 // Sets default values
 AStartpagecontrol::AStartpagecontrol()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 
 	PrimaryActorTick.bCanEverTick = true;
 	
-	// RenderFlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("RenderFlipbookComponent"));
-	// RootComponent = RenderFlipbookComponent; // 设置为根组件，确保显示
-	// TankFlipbookMouse = CreateDefaultSubobject<UPaperFlipbook>(TEXT("TankFlipbook"));
+	 
 	 TankAnimationWidget = nullptr;
 	 TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/uitank.uitank_C'")); ;
 }
@@ -26,14 +24,7 @@ void AStartpagecontrol::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// TankFlipbookMouse=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
-	//
-	// if ( TankFlipbookMouse)
-	// {
-	// 	RenderFlipbookComponent->SetFlipbook(TankFlipbookMouse);
-	// 	RenderFlipbookComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
-	// 	// 3. 调整坦克大小（鼠标样式要小）
-	// 	RenderFlipbookComponent->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	 
 	;
 	TankAnimationWidget = CreateWidget<UUserWidget>(GetWorld(), TankAnimationWidgetClass);
 	if (TankAnimationWidget)
@@ -42,12 +33,7 @@ void AStartpagecontrol::BeginPlay()
 		TankAnimationWidget->AddToViewport();
 	 
 	}
-
-
-		 
-		 
-	 
-
+ 
 	}
  
 
@@ -55,10 +41,7 @@ void AStartpagecontrol::BeginPlay()
 void AStartpagecontrol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	 
-	 
-	
+ 
 		}
 	 
 	 
