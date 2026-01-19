@@ -63,7 +63,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
         OnKillCountChanged.Broadcast(SessionData.TankKillCount);
     }
 
-    // 增加道具（同时加分：1本=50分）
+    // 增加道具（同时加分：1=50分）
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
     void AddItemCount(int32 Count = 1)
     {
