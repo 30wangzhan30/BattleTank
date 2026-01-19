@@ -63,7 +63,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
         OnKillCountChanged.Broadcast(SessionData.TankKillCount);
     }
 
-    // 增加道具（同时加分：1=50分）
+    // 增加道具 
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
     void AddItemCount(int32 Count = 1)
     {
@@ -78,9 +78,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
     {
         SessionData.LevelClearTime = Time;
         // 时间越短，得分越高
-        if (Time <= 60.0f) AddScore(500);   // 60秒内通关：+500
-        else if (Time <= 120.0f) AddScore(200); // 2分钟内通关：+200
-        else AddScore(100);                  // 超过2分钟：+100
+       
     }
 
     // 增加得分（核心方法）
