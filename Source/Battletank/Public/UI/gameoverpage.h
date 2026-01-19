@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "GameStateBase/PlayerTankStateBase.h"
 #include "gameoverpage.generated.h"
 
 class UTextBlock;
@@ -25,7 +26,21 @@ public:
 	void BindSettlementData(const FString& HiScore, const FString& Stage, const FString& PlayerScore,
 							const TArray<FString>& ScoreItems, const TArray<FString>& ItemCounts,
 							const FString& TotalScore);
+	
+	APlayerTankStateBase* GameState;
+	// ========== UI层的事件响应函数（只接收数据，不处理核心逻辑） ==========
+	UFUNCTION() // 必须加UFUNCTION()，否则AddDynamic绑定失败
+	void OnKillCountReceived(int32 NewKillCount); // 接收击杀数
 
+	UFUNCTION()
+	void OnItemCountReceived(int32 NewItemCount); // 接收道具数
+
+	UFUNCTION()
+	void OnScoreReceived(int32 NewScore); // 接收得分
+
+	// 通用UI更新函数
+	UFUNCTION()
+	void OnGameDataChanged(EGameDataChangeType ChangeType, int32 NewValue);
 private:
 	 
   //玩家1score
@@ -54,6 +69,5 @@ private:
 	UTextBlock* num3;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* num4;
-
  
 };

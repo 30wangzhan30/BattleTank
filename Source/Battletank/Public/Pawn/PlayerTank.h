@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+ 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
@@ -16,7 +16,7 @@ USTRUCT(BlueprintType)
 struct BATTLETANK_API FGameSessionData
 {
 	GENERATED_BODY()
-
+	 
 	UPROPERTY(BlueprintReadWrite)
 	int32 TankKillCount = 0;      // 坦克击杀数
 	UPROPERTY(BlueprintReadWrite)
@@ -100,7 +100,9 @@ public:
 	void OnMoveDownPressed();
 	
 	void Onshoot();
-	//
+	void OnKillEnemy();
+	
+	
 	void  PressedFunction();
 	void ReleasedFunction();
 	

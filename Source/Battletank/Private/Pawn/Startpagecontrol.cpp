@@ -6,8 +6,10 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/gameoverpage.h"
 #include "UI/tankui.h"
 
+ 
 // Sets default values
 AStartpagecontrol::AStartpagecontrol()
 {
@@ -16,7 +18,8 @@ AStartpagecontrol::AStartpagecontrol()
 	
 	 
 	 TankAnimationWidget = nullptr;
-	 TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/uitank.uitank_C'")); ;
+	  TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/uitank.uitank_C'")); ;
+	//TankAnimationWidgetClass= LoadClass<Ugameoverpage>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/gameover.gameover_C'")); 
 }
 
 // Called when the game starts or when spawned

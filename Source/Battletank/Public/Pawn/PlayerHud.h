@@ -6,6 +6,7 @@
 #include "UI/MainUI.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Hud.h"
+#include "UI/gameoverpage.h"
 #include "PlayerHud.generated.h"
 
 UCLASS()
@@ -24,7 +25,9 @@ protected:
 public:
 	 
 	virtual void Tick(float DeltaTime) override;
-	
+	 
+	 
+	void SwitchUI(const FString& WidgetPath);  
 
 	// 保存当前显示的Widget实例
 	UPROPERTY(VisibleAnywhere, Category = "UI State")
@@ -32,6 +35,8 @@ public:
 	// 声明Widget组件（用于承载UI的核心组件）
 	UPROPERTY(VisibleAnywhere, Category = "UI Widget")
 	UMainUI* TankWidgetComponent;
+	UPROPERTY(VisibleAnywhere, Category = "UI Widget")
+	Ugameoverpage* OVERComponent;
 
 	// 要加载的Widget蓝图类（在蓝图中指定，比如你的GameEnterPanel）
 	UPROPERTY(EditAnywhere, Category = "UI Widget")

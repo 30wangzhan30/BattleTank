@@ -5,11 +5,13 @@
 #include <ThirdParty/ShaderConductor/ShaderConductor/External/DirectXShaderCompiler/include/dxc/DXIL/DxilConstants.h>
 
 #include "PaperFlipbookComponent.h"
+ 
 #include "PaperFlipbook.h"
 #include "InputActionValue.h"
 #include "FrameWork/TankController.h"
 #include "GameFramework/FloatingPawnMovement.h"
- 
+#include "GameStateBase/PlayerTankStateBase.h"
+
 // Sets default values
 APlayerTank::APlayerTank()
 {
@@ -76,13 +78,30 @@ void APlayerTank::BeginPlay()
 	}
 	
 }
-
+void APlayerTank::OnKillEnemy()
+{
+	APlayerTankStateBase* GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
+	if (GameState)
+	{
+		 
+		GameState->AddKillCount(1);
+	}
+}
 // Called every frame
 void APlayerTank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	
+	//测试一下存数据(这段后面删掉)
+	OnKillEnemy();
+{
+    // 步骤1：获取 GameState 实例
+    APlayerTankStateBase* GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
+    if (GameState)
+    {
+        // 步骤2：调用 AddKillCount
+        GameState->AddKillCount(1);
+    }
+}
 	//玩家2的移动处理
 	if (PlayerIndex == 1)
 	{

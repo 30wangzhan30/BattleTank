@@ -6,7 +6,8 @@
  
 #include "UObject/ConstructorHelpers.h"
 #include "Components/WidgetComponent.h"
- 
+#include "UI/gameoverpage.h"
+
 #include "UI/MainUI.h"
  
 // Sets default values
@@ -36,10 +37,20 @@ void APlayerHud::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+ 
+
+void APlayerHud::SwitchUI(const FString& WidgetPath)
+{
+	 
+		
+}
+//把所有ui都创建出来然后隐藏
 void APlayerHud::CreateWidgetInstance()
 {//static ConstructorHelpers::FClassFinder<UMainUI> WidgetFinder(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'"));
-	 TargetWidgetClass= LoadClass<UMainUI>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'")); 
+	  TargetWidgetClass= LoadClass<UMainUI>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'")); 
 	//TargetWidgetClass =WidgetFinder.Class;
 	TankWidgetComponent =  CreateWidget<UMainUI>(GetOwningPlayerController(),TargetWidgetClass);
+	//TargetWidgetClass= LoadClass<Ugameoverpage>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/gameover.gameover_C'")); 
+	//OVERComponent = CreateWidget<Ugameoverpage>(GetOwningPlayerController(),TargetWidgetClass);
 }
  
