@@ -20,7 +20,7 @@ struct BATTLETANK_API FGameSessionData
 	UPROPERTY(BlueprintReadWrite)
 	int32 TankKillCount = 0;      // 坦克击杀数
 	UPROPERTY(BlueprintReadWrite)
-	int32 ItemBookCount = 0;      // 道具数量
+	int32 ItemCount = 0;      // 道具数量
 	UPROPERTY(BlueprintReadWrite)
 	float LevelClearTime = 0.0f;  // 本局通关时间
 	UPROPERTY(BlueprintReadWrite)

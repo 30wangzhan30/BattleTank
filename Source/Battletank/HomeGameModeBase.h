@@ -59,10 +59,10 @@ public:
 
     // 拾取道具时调用
     UFUNCTION(BlueprintCallable, Category = "TankGameMode")
-    void OnItemBookCollected()
+    void OnItemCollected()
     {
        // APlayerTankStateBase* TankGameState = Cast<APlayerTankStateBase>(GetGameState());
-     //   if (TankGameState) TankGameState->AddItemBookCount(1);
+     //   if (TankGameState) TankGameState->AddItemCount(1);
     }
 
     // 关卡通关时调用（核心逻辑）

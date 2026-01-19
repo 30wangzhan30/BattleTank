@@ -63,13 +63,13 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
         OnKillCountChanged.Broadcast(SessionData.TankKillCount);
     }
 
-    // 增加道具书（同时加分：1本=50分）
+    // 增加道具（同时加分：1本=50分）
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
-    void AddItemBookCount(int32 Count = 1)
+    void AddItemCount(int32 Count = 1)
     {
-        SessionData.ItemBookCount += Count;
+        SessionData.ItemCount += Count;
         AddScore(Count * 50);
-        OnItemBookCountChanged.Broadcast(SessionData.ItemBookCount);
+        OnItemCountChanged.Broadcast(SessionData.ItemCount);
     }
 
     // 记录通关时间（同时根据时间奖励得分）
@@ -98,7 +98,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
         SessionData = FGameSessionData(); // 重置为默认值
         OnScoreChanged.Broadcast(0);
         OnKillCountChanged.Broadcast(0);
-        OnItemBookCountChanged.Broadcast(0);
+        OnItemCountChanged.Broadcast(0);
     }
 
     // ========== 数据变化事件（UI绑定刷新） ==========
@@ -109,9 +109,9 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
     FOnKillCountChanged OnKillCountChanged;
 
     // 道具数量变化事件
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemBookCountChanged, int32, NewCount);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemCountChanged, int32, NewCount);
     UPROPERTY(BlueprintAssignable, Category = "TankGameData")
-    FOnItemBookCountChanged OnItemBookCountChanged;
+    FOnItemCountChanged OnItemCountChanged;
 
  
 
