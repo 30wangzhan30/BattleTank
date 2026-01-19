@@ -18,7 +18,7 @@ AStartpagecontrol::AStartpagecontrol()
 	// RootComponent = RenderFlipbookComponent; // 设置为根组件，确保显示
 	// TankFlipbookMouse = CreateDefaultSubobject<UPaperFlipbook>(TEXT("TankFlipbook"));
 	 TankAnimationWidget = nullptr;
-	 TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/Mytankui.Mytankui_C'")); ;
+	 TankAnimationWidgetClass =  LoadClass<Utankui>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/uitank.uitank_C'")); ;
 }
 
 // Called when the game starts or when spawned

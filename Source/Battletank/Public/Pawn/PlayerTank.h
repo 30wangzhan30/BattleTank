@@ -11,6 +11,35 @@ class UFloatingPawnMovement;
 class ATankController;
 struct FInputActionValue;
 
+// 单局临时数据（击杀数/道具/时间/得分）
+USTRUCT(BlueprintType)
+struct BATTLETANK_API FGameSessionData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 TankKillCount = 0;      // 坦克击杀数
+	UPROPERTY(BlueprintReadWrite)
+	int32 ItemBookCount = 0;      // 道具数量
+	UPROPERTY(BlueprintReadWrite)
+	float LevelClearTime = 0.0f;  // 本局通关时间
+	UPROPERTY(BlueprintReadWrite)
+	int32 Score = 0;              // 单局总得分
+};
+
+// 永久存档数据（通关关卡/最佳时间/最佳得分）
+USTRUCT(BlueprintType)
+struct BATTLETANK_API FGameSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 UnlockedLevel = 1;                  // 已通关最高关卡
+	UPROPERTY(BlueprintReadWrite)
+	TMap<int32, float> LevelBestTimes;        // 各关卡最佳通关时间（键=关卡号）
+	UPROPERTY(BlueprintReadWrite)
+	TMap<int32, int32> LevelBestScores;       // 各关卡最佳得分（键=关卡号）
+};
 UENUM(BlueprintType)
 enum class ETankDirection : uint8
 {
