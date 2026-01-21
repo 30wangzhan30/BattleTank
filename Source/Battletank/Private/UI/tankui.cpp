@@ -54,6 +54,7 @@ void Utankui::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	//  计算方向+转向 
 	FVector DirectionToMouse = (WorldPos - ActorPos).GetSafeNormal();
 	FRotator TargetRot = UKismetMathLibrary::MakeRotFromX(DirectionToMouse);
+	TargetRot.Yaw +=180;
 	if (DirectionToMouse.IsNearlyZero())
 	{
 		DirectionToMouse = FVector(100, 0, 0); //  
@@ -70,7 +71,7 @@ void Utankui::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	TargetRot.Roll =  0.0f;
 	 
 	 
-	FRotator TargetRotation = FRotator( TargetRot );
+	FRotator TargetRotation = FRotator( TargetRot);
 	if (TargetRotation.Yaw < 0)
 		TargetRotation.Yaw += 360.0f;
 	FRotator Rotation = FRotator(this->GetRenderTransform().Angle);
@@ -90,7 +91,7 @@ void Utankui::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	  
 
 	// 计算移动增量
-	FVector MoveDelta = DirectionToMouse  * TankMoveSpeed ;//* DeltaTime;
+	FVector MoveDelta = DirectionToMouse * TankMoveSpeed ;//* DeltaTime;
 	MoveDelta.Z = 0.0f; // 
 	FVector NewActorPos = ActorPos + MoveDelta;
 

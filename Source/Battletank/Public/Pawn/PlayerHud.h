@@ -3,12 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/MainUI.h"
-#include "Components/WidgetComponent.h"
+ 
+ 
 #include "GameFramework/Hud.h"
 #include "UI/gameoverpage.h"
 #include "PlayerHud.generated.h"
+UENUM(BlueprintType)
+enum class EUIType : uint8
+{
+	StartPage,    // 开始页面
+	GameOverPage, // 游戏结束页面
+	GamePlayUI,   // 游戏中UI 
+	SettingUI     // 设置UI 
+};
 
+//  
+USTRUCT(BlueprintType)
+struct FUIConfig
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EUIType UITypes;  
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString WidgetPath;
+};
 UCLASS()
 class BATTLETANK_API APlayerHud : public AHUD
 {
@@ -26,23 +46,24 @@ public:
 	 
 	virtual void Tick(float DeltaTime) override;
 	 
-	 
-	void SwitchUI(const FString& WidgetPath);  
+	void CreateWidgetInstance();
+	void SwitchUI(EUIType TargetUIType);  
+	void HideUI();
 
 	// 保存当前显示的Widget实例
 	UPROPERTY(VisibleAnywhere, Category = "UI State")
 	UUserWidget* CurrentActiveWidget;
 	// 声明Widget组件（用于承载UI的核心组件）
-	UPROPERTY(VisibleAnywhere, Category = "UI Widget")
-	UMainUI* TankWidgetComponent;
-	UPROPERTY(VisibleAnywhere, Category = "UI Widget")
-	Ugameoverpage* OVERComponent;
+	//UPROPERTY(VisibleAnywhere, Category = "UI Widget")
+	//UMainUI* TankWidgetComponent;
+	//UPROPERTY(VisibleAnywhere, Category = "UI Widget")
+	//Ugameoverpage* OVERComponent;
 
 	// 要加载的Widget蓝图类（在蓝图中指定，比如你的GameEnterPanel）
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
 	TSubclassOf<UUserWidget> TargetWidgetClass;
 	
-    UPROPERTY(EditAnywhere, Category = "UI Widget")
+	UPROPERTY(EditAnywhere, Category = "UI Widget")
 	TSubclassOf<UUserWidget> StartPageWidgetClass; // 开始游戏页面
 
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
@@ -51,11 +72,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
 	TSubclassOf<UUserWidget> AddPointWidgetClass; // 加点数页面
 	
-	void CreateWidgetInstance();
-	// 初始化Widget组件的辅助函数
-	void InitWidgetComponent();
+	 
+	// 存储所有UI实例 
+	TMap<EUIType, UUserWidget*> AllUIInstances;
 
-	// 动态生成并显示Widget的函数
-	void SpawnAndShowWidget();
+	// 当前显示的UI类型
+	EUIType CurrentUIType = EUIType::StartPage;
+
+	// UI配置列表 
+	UPROPERTY(EditDefaultsOnly, Category = "UI Config")
+	TArray<FUIConfig> UIConfigList;
 	 
 };

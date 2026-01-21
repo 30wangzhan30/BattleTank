@@ -8,15 +8,18 @@
 #include "Actors/TankBullet.h"
 #include "GameStateBase/PlayerTankStateBase.h"
 #include "Pawn/PlayerHud.h"
-#include "Pawn/Startpagecontrol.h"
+#include "UI/Startpagecontrol.h"
 #include "FrameWork/TankController.h"
 AHomeGameModeBase ::AHomeGameModeBase()
 {
  	// DefaultPawnClass = APlayerTank::StaticClass();
-	DefaultPawnClass = AStartpagecontrol::StaticClass();
+	//DefaultPawnClass = UStartpagecontrol::StaticClass();
 	PlayerControllerClass = ATankController::StaticClass();
  	 GameStateClass = APlayerTankStateBase::StaticClass();
- 	 HUDClass = APlayerHud::StaticClass();
+	static ConstructorHelpers::FClassFinder<APlayerHud> HUD_BP(TEXT("/Script/Engine.Blueprint'/Game/StartPawn/playerhud/MyPlayerHud.MyPlayerHud_C'"));
+
+	HUDClass= HUD_BP.Class;
+ 	// HUDClass = APlayerHud::StaticClass();
 }
 void AHomeGameModeBase::BeginPlay()
  {

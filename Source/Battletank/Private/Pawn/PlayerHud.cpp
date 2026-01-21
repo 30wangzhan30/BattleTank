@@ -9,7 +9,8 @@
 #include "UI/gameoverpage.h"
 
 #include "UI/MainUI.h"
- 
+#include "UObject/ObjectMacros.h"
+
 // Sets default values
 APlayerHud::APlayerHud()
 {
@@ -23,11 +24,11 @@ APlayerHud::APlayerHud()
 void APlayerHud::BeginPlay()
 {
 	Super::BeginPlay();
+	 
+	// 初始化并预加载所有UI实例
 	CreateWidgetInstance();
-	if (TankWidgetComponent)
-	{     
-			 TankWidgetComponent->AddToViewport();
-	}
+	SwitchUI(EUIType::StartPage);
+	 
 
 }
 
@@ -39,18 +40,78 @@ void APlayerHud::Tick(float DeltaTime)
 
  
 
-void APlayerHud::SwitchUI(const FString& WidgetPath)
-{
+void APlayerHud::SwitchUI(EUIType TargetUIType)
+{HideUI();
+	FString TargetPath;
+	for (const FUIConfig& Config : UIConfigList)
+	{
+		if (Config.UITypes == TargetUIType)
+		{
+			TargetPath = Config.WidgetPath;
+			break;
+		}
+	}
 	 
-		
+	UClass* WidgetClass = LoadClass<UUserWidget>(nullptr, *TargetPath);
+	if (!WidgetClass) {
+		 
+		return;
+	}
+	UUserWidget* TargetWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+	if (TargetWidget)
+	{
+		TargetWidget->AddToViewport();
+		TargetWidget->SetVisibility(ESlateVisibility::Visible);
+		CurrentActiveWidget = TargetWidget;
+		 
+	}
+
+ }
+
+void APlayerHud::HideUI()
+{  
+ 
+	if (CurrentActiveWidget)
+	{
+		CurrentActiveWidget->SetVisibility(ESlateVisibility::Hidden);
+		CurrentActiveWidget = nullptr;
+	}
 }
+
 //把所有ui都创建出来然后隐藏
 void APlayerHud::CreateWidgetInstance()
-{//static ConstructorHelpers::FClassFinder<UMainUI> WidgetFinder(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'"));
-	  TargetWidgetClass= LoadClass<UMainUI>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/StartPage.StartPage_C'")); 
-	//TargetWidgetClass =WidgetFinder.Class;
-	TankWidgetComponent =  CreateWidget<UMainUI>(GetOwningPlayerController(),TargetWidgetClass);
-	//TargetWidgetClass= LoadClass<Ugameoverpage>(this, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/gameover.gameover_C'")); 
-	//OVERComponent = CreateWidget<Ugameoverpage>(GetOwningPlayerController(),TargetWidgetClass);
+{
+	
+	
+	// 清空旧实例，避免重复创建
+	AllUIInstances.Empty();
+	 
+
+	// 遍历UI配置列表 
+	for (const FUIConfig& Config : UIConfigList)
+	{
+		if (Config.WidgetPath.IsEmpty())
+		{
+			 
+			continue;
+		}
+		// 从路径加载Widget类 
+		UClass* WidgetClass = LoadClass<UUserWidget>(nullptr, *Config.WidgetPath);
+		if (!WidgetClass)
+		{
+			 
+			continue;
+		}
+
+		// 创建Widget实例 
+		UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+		if (NewWidget)
+		{
+			// 先隐藏，加入管理Map
+			NewWidget->SetVisibility(ESlateVisibility::Hidden);
+			AllUIInstances.Add(Config.UITypes, NewWidget);
+		 
+		}
+	}
 }
  

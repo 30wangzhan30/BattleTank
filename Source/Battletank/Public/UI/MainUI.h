@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Pawn/PlayerHud.h"
 
 #include "MainUI.generated.h"
 
@@ -57,7 +58,8 @@ private:
 	
 	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel")
 	//TArray<UTexture2D*> BGTextures;
-	
+  	UPROPERTY()
+  	APlayerHud* CurrentHud;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton* PlayerSingle;
 	
@@ -92,5 +94,15 @@ protected:
 	//virtual void RemoveFromParent() override;
 	
 	//virtual void NativeDestruct() override;
-	
+		//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+		
+		
+    	//UButton* PlayerSingle;
+    	 
+    	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    	//UUserWidget* TankAnimationWidget;
+    
+    	 
+    	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    	//TSubclassOf<UUserWidget> TankAnimationWidgetClass;
 };

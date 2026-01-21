@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+//这个现在没用了
 #include "UI/MainUI.h"
 
 
@@ -11,26 +11,29 @@
 #include "Engine/Engine.h"
 #include "UI/tankui.h"
  
-void UMainUI ::NativeConstruct()
-{
-	 
-	Super::NativeConstruct();
  
-	PlayAnimation(animationstart); 
-	if (PlayerSingle)
-	{ // 绑定"按下时"的事件
-		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI ::OnGameEnterButtonClicked); 
-		
-	  
-	
-	}
-	 
-}
+void UMainUI::NativeConstruct()
+{
+	Super::NativeConstruct();
 
+	 
+	if (PlayerSingle)
+	{
+	 
+		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI::OnGameEnterButtonClicked);
+	}
+	if (GetWorld() && GetWorld()->GetFirstPlayerController())
+	{
+		CurrentHud = Cast<APlayerHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	}
+}
  
  void UMainUI::OnGameEnterButtonClicked()
-{     // Utankui*uitank =Cast<Utankui>(Widget 
-//float pos=	PlayerSingle->GetRenderTransform().Translation.X;
-		//uitank.SetRenderTranslation( FVector2D(pos,PlayerSingle->GetRenderTransform().Translation.Y));
-	this->SetVisibility(ESlateVisibility::Hidden);
+{ if (CurrentHud)
+  	{
+  		 
+  		CurrentHud->SwitchUI(EUIType::GamePlayUI); // 切换到游戏中UI
+  
+  	 
+  	}
 }
