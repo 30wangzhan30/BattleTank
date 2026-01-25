@@ -18,7 +18,7 @@ public:
 	 
 	virtual void NativeConstruct () override;
 	virtual void NativeTick (const FGeometry& MyGeometry, float InDeltaTime) override;
-	APlayerController* PC;
+	APlayerController* PC;  
 	UPROPERTY
 	(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	 UImage* BGImage;

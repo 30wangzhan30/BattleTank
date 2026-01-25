@@ -2,12 +2,14 @@
 
 
 #include "UI/levelevent.h"
- 
- 
+
+#include "Pawn/PlayerHud.h"
+
 
 void Ulevelevent::NativeConstruct()
 {
 	Super::NativeConstruct();
+	CurrentHud = Cast<APlayerHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	enter->OnClicked.AddDynamic(this, &Ulevelevent ::OnEnterButtonClicked); 
 	rewrite->OnClicked.AddDynamic(this, &Ulevelevent ::OnRewriteButtonClicked); 
 	look->OnClicked.AddDynamic(this, &Ulevelevent ::OnlookButtonClicked); 
@@ -16,6 +18,7 @@ void Ulevelevent::NativeConstruct()
 
 void Ulevelevent::OnEnterButtonClicked()
 {
+	CurrentHud->SwitchUI(EUIType::LoadingPage);
 }
 
 void Ulevelevent::OnRewriteButtonClicked()

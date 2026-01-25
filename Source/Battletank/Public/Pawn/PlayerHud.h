@@ -12,6 +12,7 @@ UENUM(BlueprintType)
 enum class EUIType : uint8
 {
 	StartPage,    // 开始页面
+	LoadingPage,  //加载页面
 	GameOverPage, // 游戏结束页面
 	GamePlayUI,   // 游戏中UI 
 	SettingUI     // 设置UI 
@@ -70,8 +71,13 @@ public:
 	TSubclassOf<UUserWidget> InGameWidgetClass; // 游戏中页面
 
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
-	TSubclassOf<UUserWidget> AddPointWidgetClass; // 加点数页面
+	TSubclassOf<UUserWidget> GameOverWidgetClass; //   
 	
+	UPROPERTY(EditAnywhere, Category = "UI Widget")
+	TSubclassOf<UUserWidget> LoadingWidgetClass; //  
+	
+	UPROPERTY(EditAnywhere, Category = "UI Widget")
+	TSubclassOf<UUserWidget> SettingWidgetClass; //  
 	 
 	// 存储所有UI实例 
 	TMap<EUIType, UUserWidget*> AllUIInstances;

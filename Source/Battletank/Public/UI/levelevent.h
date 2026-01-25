@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Pawn/PlayerHud.h"
 #include "levelevent.generated.h"
 
 /**
@@ -24,7 +25,8 @@ public:
 	UFUNCTION()
 	void OndeletedButtonClicked();
 	virtual void NativeConstruct() override;
-	
+	UPROPERTY()
+	APlayerHud* CurrentHud;
 	 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton* enter;

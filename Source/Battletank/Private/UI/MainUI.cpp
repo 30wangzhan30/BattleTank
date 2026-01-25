@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-//这个现在没用了
+ 
 #include "UI/MainUI.h"
 
 
@@ -15,8 +15,8 @@
 void UMainUI::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	 
+PlayAnimation(animationstart);
+	  
 	if (PlayerSingle)
 	{
 	 
@@ -30,9 +30,9 @@ void UMainUI::NativeConstruct()
  
  void UMainUI::OnGameEnterButtonClicked()
 { if (CurrentHud)
-  	{
-  		 
-  		CurrentHud->SwitchUI(EUIType::GamePlayUI); // 切换到游戏中UI
+  	{ CurrentHud->SwitchUI(EUIType::SettingUI);
+	 //CurrentHud->SwitchUI(EUIType:: LoadingPage);
+  		//CurrentHud->SwitchUI(EUIType::GamePlayUI); // 切换到游戏中UI
   
   	 
   	}
