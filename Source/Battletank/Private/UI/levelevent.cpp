@@ -23,6 +23,7 @@ void Ulevelevent::OnEnterButtonClicked()
 
 void Ulevelevent::OnRewriteButtonClicked()
 {
+	
 }
 
 void Ulevelevent::OnlookButtonClicked()

@@ -11,18 +11,26 @@ class BATTLETANK_API Aenemypawn : public APlayerTank
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this pawn's properties
-	Aenemypawn();
+	 
+	 
+	 
+	
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	protected:
+		// Called when the game starts or when spawned
+		virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-};
+	public:	
+		// Called every frame
+		virtual void Tick(float DeltaTime) override;
+	    Aenemypawn();
+		UPROPERTY()
+		class Achildtank* NextBody;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UPaperFlipbookComponent* FlipbookComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UPaperFlipbook* Sprite;
+		void SetSpawnNextBody( );
+		void  SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
+	};
+ 
