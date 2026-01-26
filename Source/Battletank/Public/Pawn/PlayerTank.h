@@ -3,7 +3,8 @@
 #pragma once
  
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "PaperCharacter.h"
+//#include "Pawn/PlayerTank.h"
 #include "PlayerTank.generated.h"
 
 
@@ -49,9 +50,8 @@ enum class ETankDirection : uint8
 	Down     // 下 
 };
 UCLASS()
-class BATTLETANK_API APlayerTank : public APawn
-{
-	GENERATED_BODY()
+class BATTLETANK_API APlayerTank : public APaperCharacter
+{	GENERATED_BODY()
 	
 private:
 	int32 PlayerIndex; // 玩家索引
@@ -117,9 +117,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class UPaperFlipbook* TankFlipbook;
 	//碰撞箱
-	UPROPERTY(VisibleAnywhere, Category = "Render")
-	class USphereComponent * Sphere;
-	
+	 
+ 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Render")
+	float TileSize = 1.0f;
+
 	//子弹生成
 	void SpawnBulletActor();
 	USceneComponent* BulletSpawnPosition;

@@ -16,8 +16,8 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank1FireInputDelegate, const int32,cons
 /**
  * 坦克2输入委托
  */
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank2MoveInputDelegate, const int32,const FInputActionValue&);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank2FireInputDelegate, const int32,const FInputActionValue&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank2MoveInputDelegate, const int32 ,const FInputActionValue& );
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTank2FireInputDelegate, const int32 ,const FInputActionValue& );
 
 
 

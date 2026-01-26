@@ -29,8 +29,9 @@ class BATTLETANK_API Aenemypawn : public APlayerTank
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UPaperFlipbookComponent* FlipbookComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UPaperFlipbook* Sprite;
+	class UPaperFlipbook* Sprites;
 		void SetSpawnNextBody( );
+	void BodyMove(float Deltatime);
 		void  SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
 	};
  

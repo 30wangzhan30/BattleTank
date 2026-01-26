@@ -8,6 +8,8 @@
  
 #include "PaperFlipbook.h"
 #include "InputActionValue.h"
+#include "Components/BoxComponent.h"
+ 
 #include "FrameWork/TankController.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameStateBase/PlayerTankStateBase.h"
@@ -17,11 +19,14 @@ APlayerTank::APlayerTank()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent= CreateDefaultSubobject<USceneComponent >(TEXT("root"));
+	//RootComponent= CreateDefaultSubobject<USceneComponent >(TEXT("root"));
 	RenderTankComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("RenderFlipbookComponent"));
 	RenderTankComponent->SetupAttachment(RootComponent);
 	RenderTankComponent->SetCollisionProfileName(TEXT("BlockAll"));
 	
+	 
+ 
+    //BoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
 	// 创建浮动物体移动组件
 	TankMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("TankMovement"));
 	TankMovementComponent -> UpdatedComponent = RootComponent;
@@ -46,7 +51,7 @@ APlayerTank::APlayerTank()
 
 void APlayerTank::InitializeTankController(ATankController* TankController)
 {
-	if (TankController)
+	if (IsValid(TankController))
 	{
 		if (PlayerIndex == 0)
 		{
@@ -63,7 +68,7 @@ void APlayerTank::InitializeTankController(ATankController* TankController)
 void APlayerTank::BeginPlay()
 { 
 	Super::BeginPlay();
-	UpdateTankGridLocation();
+	//UpdateTankGridLocation();
 	
 	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
  
@@ -103,7 +108,7 @@ void APlayerTank::Tick(float DeltaTime)
     }
 }
 	//玩家2的移动处理
-	if (PlayerIndex == 1)
+ 	if (PlayerIndex == 1)
 	{
 		FVector PendingMovementInputVector = GetPendingMovementInputVector();
 		PendingMovementInputVector = PendingMovementInputVector.GetSafeNormal();
@@ -117,7 +122,10 @@ void APlayerTank::Tick(float DeltaTime)
 		}
 		
 		CurrentVelocity = CurrentVelocity.GetClampedToMaxSize(MaxVelocity);
+		 
+
 		AddActorWorldOffset(CurrentVelocity * DeltaTime);
+ 
 		ConsumeMovementInputVector();
 	}
 }
