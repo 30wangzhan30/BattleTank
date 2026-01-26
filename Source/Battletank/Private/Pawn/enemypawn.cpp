@@ -12,7 +12,7 @@ Aenemypawn::Aenemypawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	 
+	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT(" FlipbookComponent"));
 	Tags.Add(TEXT("Enemy"));
 }
 
@@ -35,19 +35,19 @@ void Aenemypawn::Tick(float DeltaTime)
 }
 
 void Aenemypawn::SetSpawnNextBody( )
-{Achildtank*currentbody=GetWorld()->SpawnActor<Achildtank>(Achildtank::StaticClass());
-	{if (NextBody)
-{//第二次查找就跳转到这里， 这个next是第二节身体，每次新生成一截身体就传给setnextbody便利
-	NextBody->SetNextBody( currentbody);
-}
-else
 {
-	NextBody = currentbody;//一开始只有头没有下一截nextbody，把生成的current给next
-	NextBody->SetActorLocation(GetActorLocation() + GetActorUpVector() * -45.f);
+	Achildtank*currentbody=GetWorld()->SpawnActor<Achildtank>(Achildtank::StaticClass());
+	{if (NextBody)
+	{//第二次查找就跳转到这里， 这个next是第二节身体，每次新生成一截身体就传给setnextbody便利
+		NextBody->SetNextBody( currentbody);
+	}
+	else
+	{
+		NextBody = currentbody;//一开始只有头没有下一截nextbody，把生成的current给next
+		NextBody->SetActorLocation(GetActorLocation() + FVector::ForwardVector * 45.f);
+	}
+	}
 }
-}
-}
-
 // Called to bind functionality to input
 void Aenemypawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

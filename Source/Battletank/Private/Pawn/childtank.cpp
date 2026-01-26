@@ -11,7 +11,7 @@ Achildtank::Achildtank()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	 
+	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FlipbookComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +40,7 @@ void Achildtank::SetNextBody(Achildtank* Next)
 else
 { //便利到末尾把next赋给nextbody
 	NextBody = Next;
-	NextBody->SetActorLocation(GetActorLocation() + GetActorUpVector() * -45.f);
+	NextBody->SetActorLocation(GetActorLocation() +  FVector::ForwardVector * 45.f);
 }
 }
 
@@ -49,6 +49,7 @@ void Achildtank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-
  
+  
+  
  
