@@ -11,8 +11,10 @@
 #include "Components/BoxComponent.h"
  
 #include "FrameWork/TankController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameStateBase/PlayerTankStateBase.h"
+#include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
 // Sets default values
 APlayerTank::APlayerTank()
@@ -29,7 +31,7 @@ APlayerTank::APlayerTank()
     //BoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
 	// 创建浮动物体移动组件
 	TankMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("TankMovement"));
-	TankMovementComponent -> UpdatedComponent = RootComponent;
+	//TankMovementComponent -> UpdatedComponent = RootComponent;
 	
 	TankMovementComponent -> bConstrainToPlane = true;
 	TankMovementComponent -> SetPlaneConstraintNormal(FVector(0.0f, 0.0f, 1.0f));
@@ -124,7 +126,7 @@ void APlayerTank::Tick(float DeltaTime)
 		CurrentVelocity = CurrentVelocity.GetClampedToMaxSize(MaxVelocity);
 		 
 
-		AddActorWorldOffset(CurrentVelocity * DeltaTime);
+		AddActorWorldOffset(CurrentVelocity * DeltaTime,true);
  
 		ConsumeMovementInputVector();
 	}
@@ -172,10 +174,23 @@ void APlayerTank::MoveInputHandler(const int32 InPlayerIndex, const FInputAction
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s"),*InputVector.ToString());
-		AddMovementInput(FVector(InputVector.Y, InputVector.X, 0.0f));
+		//AddMovementInput(FVector(InputVector.Y, InputVector.X, 0.0f));
+		//TankMovementComponent -> AddInputVector(FVector(InputVector.X, InputVector.Y, 0.0f));
+		FVector MovementDirection=FVector(InputVector.Y, InputVector.X, 0.0f);
+		//TankMovementComponent->Velocity =MovementDirection*500;
+		if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+		{
+			MoveComp->Velocity =MovementDirection*5 ;
+			AddActorWorldOffset(MovementDirection*5,true );
+			UE_LOG(LogTemp, Error, TEXT("%s"),*InputVector.ToString());
+		}
+	 
+		 
 	}
-	//TankMovementComponent -> AddInputVector(FVector(InputVector.X, InputVector.Y, 0.0f));
+	
+	 
+	 
+	
 }
 
 //想要实现计算瓦片地图每个格子的位置然后SetRelativeLocation到将要移动到的位置

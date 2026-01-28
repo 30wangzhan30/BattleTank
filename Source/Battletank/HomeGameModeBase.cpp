@@ -10,12 +10,14 @@
 #include "Pawn/PlayerHud.h"
 #include "UI/Startpagecontrol.h"
 #include "FrameWork/TankController.h"
+#include "Kismet/GameplayStatics.h"
+
 AHomeGameModeBase ::AHomeGameModeBase()
 {
- 	// DefaultPawnClass = APlayerTank::StaticClass();
+	//DefaultPawnClass = APlayerTank::StaticClass();
 	//DefaultPawnClass = UStartpagecontrol::StaticClass();
 	PlayerControllerClass = ATankController::StaticClass();
- 	 GameStateClass = APlayerTankStateBase::StaticClass();
+	GameStateClass = APlayerTankStateBase::StaticClass();
 	static ConstructorHelpers::FClassFinder<APlayerHud> HUD_BP(TEXT("/Script/Engine.Blueprint'/Game/StartPawn/playerhud/MyPlayerHud.MyPlayerHud_C'"));
 
 	HUDClass= HUD_BP.Class;
@@ -35,7 +37,8 @@ void AHomeGameModeBase::BeginPlay()
  		UE_LOG(LogTemp,Error,TEXT("PlayerController is nullptr"));
  		return;
  	}
-	
+	 
+
 	//获取玩家TankController
 	ATankController* TankController = Cast<ATankController>(PC);
  	if (!TankController)
@@ -44,27 +47,35 @@ void AHomeGameModeBase::BeginPlay()
  		return;
  	}
  	// 优先获取UE自动生成的坦克
- 	APlayerTank* Tank1 = Cast<APlayerTank>(PC->GetPawn());
+ 	 APlayerTank* Tank1 = Cast<APlayerTank>(PC->GetPawn());
  	if (!Tank1)
  	{
  		// 手动Spawn坦克
- 		Tank1 = GetWorld()->SpawnActor<APlayerTank>(
+ 		FActorSpawnParameters SpawnInfo;
+ 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+ 		 Tank1 = GetWorld()->SpawnActor<APlayerTank>(
 			 APlayerTank::StaticClass(),
-			 FVector(0, 0, 0),
-			 FRotator(0, 0, 0)
+			 FVector(100, 200, 300 ),
+			 FRotator(0, 0, 0),
+			 SpawnInfo
 		 );
- 	}
-	TankController->Possess(Tank1);
+ 	
+	 TankController->Possess(Tank1);
 	Tank1 -> SetPlayerIndex(0);
 	Tank1 -> InitializeTankController(TankController);
-
+}
 		// 手动Spawn坦克2
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     	APlayerTank*	Tank2 = GetWorld()->SpawnActor<APlayerTank>(
     				APlayerTank::StaticClass(),
-    				FVector(100, 100, 0),
+    				FVector(100, 200, 300 ),
     				FRotator(0, 0, 0)
+    				
     			);
+
     	Tank2 -> SetPlayerIndex(1);
+ 
     	Tank2 -> InitializeTankController(TankController);
     	
     	if (!Tank2)
