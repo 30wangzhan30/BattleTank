@@ -98,7 +98,7 @@ void AGridActor::GridInit(EGridType GridType)
 		break;
 	}
 }
-
+//河流
 void AGridActor::AddGridCollision()
 {
 	RemoveGridCollision();
