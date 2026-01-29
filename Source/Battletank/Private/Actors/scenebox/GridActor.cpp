@@ -62,6 +62,7 @@ void AGridActor::GridInit(EGridType GridType)
 	case EGridType::Brick:
 		{
 			AddBrickGrids();
+			 
 		}
 		break;
 	case EGridType::Steel:
@@ -102,6 +103,7 @@ void AGridActor::GridInit(EGridType GridType)
 void AGridActor::AddGridCollision()
 {
 	RemoveGridCollision();
+	 
 	GridCollision = NewObject<UBoxComponent>(this,"GridCollision");
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
 	GridCollision->AttachToComponent(GridRenderer,Rules);
@@ -112,7 +114,26 @@ void AGridActor::AddGridCollision()
 	GridCollision -> SetBoxExtent(Extent);
 	GridCollision -> SetCollisionProfileName("BlockAll");
 }
-
+//砖块钢砖
+void AGridActor::AddBrickGridCollision(UPaperSpriteComponent*BrickRenderer,int Index )
+{ //先删除
+	RemoveGridCollision();
+	 
+	//逻辑有问题
+	FString CollisionName = FString::Printf(TEXT("BrickGridCollision_%d"), Index);
+	UBoxComponent* BrickGridCollision = NewObject<UBoxComponent>(this, *CollisionName);
+	BrickGridComponent.Add(BrickGridCollision);
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
+	BrickGridComponent[Index]->AttachToComponent(BrickRenderer,Rules);
+	BrickGridComponent[Index]-> RegisterComponentWithWorld(GetWorld());
+	FVector Extent{0.0f,10.0f,0.0f};
+	Extent.X = BrickRenderer -> GetSprite() ? BrickRenderer -> GetSprite() ->GetSourceSize().X / 2.0f : 32.f;
+	Extent.Z = BrickRenderer -> GetSprite() ? BrickRenderer -> GetSprite()->GetSourceSize().Y / 2.0f : 32.f;
+	BrickGridComponent[Index] -> SetBoxExtent(Extent);
+	BrickGridComponent[Index]-> SetCollisionProfileName("BlockAll");
+ 
+}
+//删除普通
 void AGridActor::RemoveGridCollision()
 {
 	if (GridCollision)
@@ -123,6 +144,14 @@ void AGridActor::RemoveGridCollision()
 		GridCollision -> DestroyComponent();
 		GridCollision = nullptr;
 	}
+}
+//删除砖
+void AGridActor::RemoveBrickGridCollision()
+{ 
+	 //逻辑有问题
+	BrickGridComponent.Empty();
+	
+	
 }
 
 void AGridActor::OnGridTriggered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -170,24 +199,26 @@ void AGridActor::RemoveGridTrigger()
 		GridTrigger = nullptr;
 	}
 }
-
+//拆分完的图片尺寸就是1/16不需要更改
 void AGridActor::AddBrickGrids()
 {
-	ClearBrickGrids();
+	 
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
-	
-	for (int i = 0; i < 16; i++)
-	{
-		UPaperSpriteComponent* BrickRenderer = NewObject<UPaperSpriteComponent>(this);
+ 	for (int i = 0; i < 16; i++)
+	{ 
+		UPaperSpriteComponent*BrickRenderer = NewObject<UPaperSpriteComponent>(this);
 		BrickRenderer -> AttachToComponent(GridRenderer,Rules);
 		BrickRenderer -> RegisterComponentWithWorld(GetWorld());
 		FVector LocationOffset{-12.f,GetActorLocation().Z,-12.f};
 		LocationOffset.X += (i % 4) * 8;
-		LocationOffset.Z += (i / 4) * 8;
+		LocationOffset.Z += (i / 4) * 8; 
+ 		
 		BrickRenderer -> SetRelativeLocation(LocationOffset);
 		if (BrickGrid.Num() > i)
 			BrickRenderer -> SetSprite(BrickGrid[i]);
-		BrickGridRenders.Add(BrickRenderer);
+		    BrickGridRenders.Add(BrickRenderer);
+ 		 AddBrickGridCollision( BrickRenderer,i);
+ 	 
 	}
 }
 

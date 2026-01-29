@@ -47,6 +47,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	UPaperSpriteComponent* GridRenderer;
+	 
+	
 	
 	UPROPERTY(EditAnywhere,Category="GridActor|Sprites")
 	UPaperSprite* EmptyGrid;
@@ -70,6 +72,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* GridCollision;
+	 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* GridTrigger;
 	
@@ -80,8 +83,9 @@ public:
 
 	
 	void AddGridCollision();
+	void AddBrickGridCollision( UPaperSpriteComponent* ,int Index);
 	void RemoveGridCollision();
-	
+	void RemoveBrickGridCollision();
 	UFUNCTION()
 	void OnGridTriggered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	void AddTrigger();
@@ -90,6 +94,9 @@ public:
 	//Brick Grid
 	UPROPERTY()
 	TArray<UPaperSpriteComponent*> BrickGridRenders;
+	UPROPERTY()
+	TArray<UBoxComponent*> BrickGridComponent;
+	 
 	void AddBrickGrids();
 	void ClearBrickGrids();
 	
