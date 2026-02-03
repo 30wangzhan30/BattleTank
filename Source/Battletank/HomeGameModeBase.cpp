@@ -29,7 +29,7 @@ void AHomeGameModeBase::BeginPlay()
  	GetWorld()->SpawnActor< ABackGround >( ABackGround ::StaticClass(), FVector(320.0f,  -790.f,  50.f), FRotator (0.0f, 90.0f, -90.0f));
  
  	//实例化填装对象池
- 	Addinitilize();
+ 	//Addinitilize();
  	
  	APlayerController* PC = GetWorld()->GetFirstPlayerController();
  	if (!PC)
@@ -99,7 +99,7 @@ void AHomeGameModeBase::BeginPlay()
 // 初始化5个子弹，放进池子里
 void AHomeGameModeBase::Addinitilize()
 {
-	for (int i=0;i<MaxBulletCount;i++)
+	for (int i=0;i<0;i++)
 	{
 		UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
 		ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, FVector(0,0,0), FRotator::ZeroRotator);//要隐藏

@@ -43,7 +43,7 @@ public:
 		// 响应重叠事件的触发器组件（BulletCollision：碰撞预设为OverlapAll/半径比资产的宽
 		// 游戏测试阶段开始游戏不要隐藏/绑定代理通知）
 		UPROPERTY(VisibleAnywhere, Category="BulletActor|Components")
-		class USphereComponent* BulletCollision;
+		class UBoxComponent* BulletCollision;
 
 		UFUNCTION()
 		void OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent,
@@ -52,7 +52,9 @@ public:
 										   int32 OtherBodyIndex,
 										   bool bFromSweep,
 										   const FHitResult& SweepResult);
-	 
+	UFUNCTION()
+	void   OnBulletHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
 	void BulletDestroy();
 	UPROPERTY()
 	class AHomeGameModeBase* HomeGameMode;
@@ -97,6 +99,5 @@ private:
 	float LifeTimer = 0.0f;
 
 	// 碰撞回调函数
-	//UFUNCTION()
-	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 };

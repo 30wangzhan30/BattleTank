@@ -93,6 +93,8 @@ public:
     //处理移动输入
 	UFUNCTION()
 	void MoveInputHandler(const int32 InPlayerIndex,const FInputActionValue& Value);
+	UFUNCTION()
+	void FireInputHandler(const int32 InPlayerIndex,const FInputActionValue& Value);
 	//上下左右移动函数
 	void OnMoveRightPressed();
 	void OnMoveLeftPressed();
@@ -117,7 +119,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class UPaperFlipbook* TankFlipbook;
 	//碰撞箱
-	 
+ 
  
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Render")
 	float TileSize = 1.0f;

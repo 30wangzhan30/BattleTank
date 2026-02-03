@@ -7,6 +7,7 @@
 #include "PaperFlipbook.h"
   
 #include "Battletank/HomeGameModeBase.h"
+#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,18 +17,19 @@ ATankBullet::ATankBullet()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+ // 创建根组件
+	 RootComponent = CreateDefaultSubobject<USceneComponent>("DRootComponent");
+	//创建渲染组件 
+    	RenderBulletComponent = CreateDefaultSubobject<UPaperFlipbookComponent>("RenderBulletComponent");
+    	RenderBulletComponent->SetupAttachment(RootComponent);
 	
-	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
-	RenderBulletComponent = CreateDefaultSubobject<UPaperFlipbookComponent>("RenderBulletComponent");
-	BulletCollision = CreateDefaultSubobject<USphereComponent>("BulletCollision");
-
-	RenderBulletComponent->SetupAttachment(RootComponent);
-	BulletCollision->SetupAttachment(RenderBulletComponent);
-
-	BulletCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	BulletCollision->SetSphereRadius(14.f);//测试值
-	BulletCollision->bHiddenInGame = false;//测试阶段
+	// 创建碰撞组件b
+	BulletCollision = CreateDefaultSubobject<UBoxComponent>("BulletCollision");
+	BulletCollision->SetupAttachment(RootComponent);
+	//BulletCollision->SetSimulatePhysics(true);
+	 
+	 BulletCollision->bHiddenInGame =false;//测试阶段
+	
 }
 
 // Called when the game starts or when spawned
@@ -38,8 +40,20 @@ void ATankBullet::BeginPlay()
 	// HitBulletFlipbook = LoadObject<UPaperFlipbook>(  this,  TEXT("/Script/Paper2D.PaperFlipbook'/Game/FlappyBird/Animations/PF_Hit_Bullet.PF_Hit_Bullet'"));//爆炸时
 	 RenderBulletComponent->SetFlipbook(NormalBulletFlipbook);
 	 RenderBulletComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
-	  BulletCollision->OnComponentBeginOverlap.AddDynamic(this, &ATankBullet::OnComponentBeginOverlapEvent);
-	
+	 
+	 
+	if (IsValid(BulletCollision))
+	{
+		BulletCollision->SetCollisionProfileName("OverlapAll"); 
+		BulletCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  
+		BulletCollision->SetGenerateOverlapEvents(true);  
+		BulletCollision->SetBoxExtent(FVector(1, 15, 1));  
+		
+		
+		 BulletCollision->OnComponentHit.AddDynamic(this, &ATankBullet::OnBulletHit);
+		// BulletCollision->OnComponentBeginOverlap.AddDynamic(this, &ATankBullet::OnComponentBeginOverlapEvent);
+	}
+		
 	 HomeGameMode = Cast<AHomeGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
@@ -48,26 +62,38 @@ void ATankBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	// 每帧调用BulletMove，让子弹持续移动
-	BulletMove(  DeltaTime);
+	BulletMove(DeltaTime);
 }
 
 void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{if (OtherActor != this)
-{
-	// 判断是否碰撞到"Enemy"标签的Actor
-	if (OtherActor->ActorHasTag(TEXT("Enemy")))
-	{
-		// 切换到碰撞后的动画（停止循环）
-		RenderBulletComponent->SetLooping(false);
-		BulletMoveSpeed = 0.f;
-		RenderBulletComponent->SetFlipbook(HitBulletFlipbook);
-
-		// 延迟销毁子弹
-		FTimerHandle TimerHandle;
-		GetWorldTimerManager().SetTimer(  TimerHandle, this,  &ATankBullet::BulletDestroy, 3.f);
-	}
+{ UE_LOG(LogTemp, Log, TEXT("HIT"));
+	//OverlappedComponent->DestroyComponent();
+	 
+	// {if (OtherActor != this)
+// {
+// 	// 判断是否碰撞到"Enemy"标签的Actor
+// 	if (OtherActor->ActorHasTag(TEXT("Enemy")))
+// 	{
+// 		// 切换到碰撞后的动画（停止循环）
+// 		RenderBulletComponent->SetLooping(false);
+// 		BulletMoveSpeed = 0.f;
+// 		RenderBulletComponent->SetFlipbook(HitBulletFlipbook);
+//
+// 		// 延迟销毁子弹
+// 		FTimerHandle TimerHandle;
+// 		GetWorldTimerManager().SetTimer(  TimerHandle, this,  &ATankBullet::BulletDestroy, 3.f);
+// 	}
+// }
 }
+
+void ATankBullet::OnBulletHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{ UE_LOG(LogTemp, Log, TEXT("HIT"));
+     //HitComp->DestroyComponent();
+	//OtherActor->Destroy ();
+	HitComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+ 
 }
 
 
@@ -94,14 +120,18 @@ void ATankBullet::SetBulletMoveDirection(FVector NewDirection)
 	BulletMoveDirection = NewDirection;
 }
 
+ 
+
 void ATankBullet::BulletMove(float DeltaTime)
-{
-	static float _Speed = 20;
-	_Speed=DeltaTime*BulletMoveSpeed;
+{  
+	
 	// 计算本次帧的移动距离（速度 × 时间）
 	float MoveDistance = BulletMoveSpeed * DeltaTime;
 	// 根据“移动方向”和“距离”，计算新位置
 	FVector NewLocation = GetActorLocation() + (BulletMoveDirection.GetSafeNormal() * MoveDistance);
 	// 更新子弹的位置
-	SetActorLocation(NewLocation);
+	  this->SetActorLocation(NewLocation);
+	//if (IsValid(BulletCollision))
+	//BulletCollision->AddForce(FVector(BulletMoveDirection.X*100,BulletMoveDirection.Y*100, 0));
+	 
 }

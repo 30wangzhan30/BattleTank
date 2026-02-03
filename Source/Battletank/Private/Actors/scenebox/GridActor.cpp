@@ -15,7 +15,7 @@ AGridActor::AGridActor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+	 
 	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 	GridRenderer = CreateDefaultSubobject<UPaperSpriteComponent>("GridRenderer");
 	
@@ -30,7 +30,17 @@ AGridActor::AGridActor()
 void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	for (int32 i = 0; i < BrickGridComponent.Num(); i++)
+	{
+		if (IsValid(BrickGridComponent[i]))
+		{
+			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
+			BrickGridRenders[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
+			
+			 BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			 BrickGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+		}
+	}
 }
 
 void AGridActor::OnConstruction(const FTransform& Transform)
@@ -43,6 +53,7 @@ void AGridActor::OnConstruction(const FTransform& Transform)
 void AGridActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+ 
 }
 
 void AGridActor::GridInit(EGridType GridType)
@@ -53,6 +64,7 @@ void AGridActor::GridInit(EGridType GridType)
 	ClearSteelGrids();
 	RemoveGridTrigger();
 	RemoveGridCollision();
+	RemoveBrickGridCollision();
 	GridRenderer -> SetSprite(nullptr);
 
 	switch (CurrentGridType) {
@@ -103,7 +115,7 @@ void AGridActor::GridInit(EGridType GridType)
 void AGridActor::AddGridCollision()
 {
 	RemoveGridCollision();
-	 
+	RemoveBrickGridCollision();
 	GridCollision = NewObject<UBoxComponent>(this,"GridCollision");
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
 	GridCollision->AttachToComponent(GridRenderer,Rules);
@@ -118,11 +130,14 @@ void AGridActor::AddGridCollision()
 void AGridActor::AddBrickGridCollision(UPaperSpriteComponent*BrickRenderer,int Index )
 { //先删除
 	RemoveGridCollision();
-	 
-	//逻辑有问题
+
+	//逻辑有问题 
 	FString CollisionName = FString::Printf(TEXT("BrickGridCollision_%d"), Index);
 	UBoxComponent* BrickGridCollision = NewObject<UBoxComponent>(this, *CollisionName);
-	BrickGridComponent.Add(BrickGridCollision);
+	BrickGridComponent.SetNum(16);
+	BrickGridComponent[Index]=BrickGridCollision;
+	if(!BrickGridComponent[Index])
+	{return;}
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
 	BrickGridComponent[Index]->AttachToComponent(BrickRenderer,Rules);
 	BrickGridComponent[Index]-> RegisterComponentWithWorld(GetWorld());
@@ -149,7 +164,22 @@ void AGridActor::RemoveGridCollision()
 void AGridActor::RemoveBrickGridCollision()
 { 
 	 //逻辑有问题
-	BrickGridComponent.Empty();
+	 
+ 
+	for (UBoxComponent* CollisionComp : BrickGridComponent)
+	{
+		 
+		if (CollisionComp)
+		{
+		 
+		 
+			FDetachmentTransformRules DetachRules(EDetachmentRule::KeepRelative, true);
+			CollisionComp->DetachFromComponent(DetachRules);
+	 
+			CollisionComp->UnregisterComponent();
+		 
+		}
+	}
 	
 	
 }
@@ -199,10 +229,10 @@ void AGridActor::RemoveGridTrigger()
 		GridTrigger = nullptr;
 	}
 }
-//拆分完的图片尺寸就是1/16不需要更改
+ 
 void AGridActor::AddBrickGrids()
 {
-	 
+	  RemoveBrickGridCollision();
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
  	for (int i = 0; i < 16; i++)
 	{ 
@@ -217,6 +247,7 @@ void AGridActor::AddBrickGrids()
 		if (BrickGrid.Num() > i)
 			BrickRenderer -> SetSprite(BrickGrid[i]);
 		    BrickGridRenders.Add(BrickRenderer);
+ 		
  		 AddBrickGridCollision( BrickRenderer,i);
  	 
 	}
@@ -273,3 +304,22 @@ void AGridActor::ClearSteelGrids()
 	}
 }
 
+void AGridActor:: OnBrickHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{ 	 	UE_LOG(LogTemp, Log, TEXT("hitttt"));
+	HitComp->SetGenerateOverlapEvents(false);
+	HitComp->DestroyComponent();
+	HitComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BrickGridComponent.Remove(Cast<UBoxComponent>(HitComp));
+
+}
+
+void AGridActor:: OnBrickOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{ 	 	UE_LOG(LogTemp, Log, TEXT("hitttt"));
+	OverlappedComponent->SetGenerateOverlapEvents(false);
+	OverlappedComponent->DestroyComponent();
+	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BrickGridComponent.Remove(Cast<UBoxComponent>(OverlappedComponent));
+
+}
