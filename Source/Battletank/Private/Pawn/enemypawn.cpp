@@ -4,6 +4,9 @@
 #include "Pawn/enemypawn.h"
 #include "PaperFlipbookComponent.h"
 #include "PaperFlipbook.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Pawn/childtank.h"
 
 
@@ -12,7 +15,17 @@ Aenemypawn::Aenemypawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT(" FlipbookComponent"));
+	 
+	 RootCapsule  = Cast<UCapsuleComponent>(GetRootComponent());
+	if (IsValid(RootComponent))
+	{
+		RootCapsule ->SetCapsuleRadius (15.0f);
+		RootCapsule->SetCapsuleHalfHeight (15.0f);
+	  box =CreateDefaultSubobject<UBoxComponent>("enemy");
+	 	 
+		RootCapsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		//	RootCapsule->SetSimulatePhysics(true);
+	}
 	Tags.Add(TEXT("Enemy"));
 }
 
@@ -20,11 +33,9 @@ Aenemypawn::Aenemypawn()
 void Aenemypawn::BeginPlay()
 {
 	Super::BeginPlay();
-	Sprites = LoadObject<UPaperFlipbook>(this, TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
-	if ( Sprites)
-	{
-		FlipbookComponent->SetFlipbook( Sprites);
-	}
+	//Sprites = LoadObject<UPaperFlipbook>(this, TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
+	 
+	  box->OnComponentBeginOverlap.AddDynamic(this, &Aenemypawn::OnEnemyOverlap);
 }
 
 // Called every frame
@@ -53,8 +64,7 @@ void Aenemypawn::SetSpawnNextBody( )
 void Aenemypawn::BodyMove(float Deltatime)
 {static float _Speed = 0;
 	_Speed =50 *Deltatime;
-	AddActorLocalOffset( FlipbookComponent-> GetForwardVector() * _Speed);
-
+	//AddActorLocalOffset( FlipbookComponent-> GetForwardVector() * _Speed);
 	if (NextBody)
 	{
 		// Tick每执行一次，就会传递一个位置点
@@ -62,9 +72,13 @@ void Aenemypawn::BodyMove(float Deltatime)
 	}
 }
 
-// Called to bind functionality to input
-void Aenemypawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
+ 
 
+void Aenemypawn:: OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{ 	 	UE_LOG(LogTemp, Log, TEXT("hitttt"));
+	
+	OverlappedComponent->SetGenerateOverlapEvents(false);
+	OverlappedComponent->DestroyComponent();
+	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
