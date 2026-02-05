@@ -35,9 +35,13 @@ void AGridActor::BeginPlay()
 		if (IsValid(BrickGridComponent[i]))
 		{
 			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
-			BrickGridRenders[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
-			
 			 BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			
+		}
+		if (IsValid(BrickGridRenders[i]))
+		{
+			 
+	 BrickGridRenders[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
 			 BrickGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
 		}
 	}
@@ -111,7 +115,7 @@ void AGridActor::GridInit(EGridType GridType)
 		break;
 	}
 }
-//河流
+//河流碰撞
 void AGridActor::AddGridCollision()
 {
 	RemoveGridCollision();
@@ -126,7 +130,7 @@ void AGridActor::AddGridCollision()
 	GridCollision -> SetBoxExtent(Extent);
 	GridCollision -> SetCollisionProfileName("BlockAll");
 }
-//砖块钢砖
+//砖块钢砖碰撞
 void AGridActor::AddBrickGridCollision(UPaperSpriteComponent*BrickRenderer,int Index )
 { //先删除
 	RemoveGridCollision();
@@ -183,7 +187,7 @@ void AGridActor::RemoveBrickGridCollision()
 	
 	
 }
-
+ 
 void AGridActor::OnGridTriggered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -203,7 +207,7 @@ void AGridActor::OnGridTriggered(UPrimitiveComponent* OverlappedComponent, AActo
 	}
 	
 }
-
+//River:Forest:Ice:碰撞
 void AGridActor::AddTrigger()
 {
 	RemoveGridTrigger();
@@ -229,7 +233,7 @@ void AGridActor::RemoveGridTrigger()
 		GridTrigger = nullptr;
 	}
 }
- 
+ //砖块图片
 void AGridActor::AddBrickGrids()
 {
 	  RemoveBrickGridCollision();
@@ -254,7 +258,7 @@ void AGridActor::AddBrickGrids()
 }
 
 void AGridActor::ClearBrickGrids()
-{
+{  
 	if (BrickGridRenders.Num() > 0)
 	{
 		FDetachmentTransformRules  Rules(EDetachmentRule::KeepRelative,true);
@@ -271,19 +275,25 @@ void AGridActor::ClearBrickGrids()
 	}
 	
 }
-
+//钢砖图片
 void AGridActor::AddSteelGrids()
-{
-	ClearSteelGrids();
+{RemoveBrickGridCollision();
+	 
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative,true);
 	for (int i = 0; i < 16; i++)
 	{
 		UPaperSpriteComponent* SteelRenderer = NewObject<UPaperSpriteComponent>(this);
 		SteelRenderer -> AttachToComponent(GridRenderer,Rules);
 		SteelRenderer -> RegisterComponentWithWorld(GetWorld());
-		if (SteelGridRenders.Num() > i)
+		FVector LocationOffset{-12.f,GetActorLocation().Z,-12.f};
+		LocationOffset.X += (i % 4) * 8;
+		LocationOffset.Z += (i / 4) * 8; 
+		SteelRenderer -> SetRelativeLocation(LocationOffset);
+		if (SteelGrid.Num() > i)
+		
 			SteelRenderer -> SetSprite(SteelGrid[i]);
 		SteelGridRenders.Add(SteelRenderer);
+		// AddBrickGridCollision( SteelRenderer,i);
 	}
 }
 

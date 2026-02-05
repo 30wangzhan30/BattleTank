@@ -39,12 +39,15 @@ public:
 		class UPaperFlipbook* NormalBulletFlipbook;
 		UPROPERTY(EditAnywhere, Category="BulletActor|Flipbook")
 		UPaperFlipbook* HitBulletFlipbook;
-
+	    UPROPERTY(EditAnywhere, Category="BulletActor|Flipbook")
+	    class UPaperFlipbookComponent * HitBulletAnimation;
+    	UPROPERTY(EditAnywhere, Category="BulletActor|Flipbook")
+	    class UPaperFlipbook  * Animation;
 		// 响应重叠事件的触发器组件（BulletCollision：碰撞预设为OverlapAll/半径比资产的宽
 		// 游戏测试阶段开始游戏不要隐藏/绑定代理通知）
 		UPROPERTY(VisibleAnywhere, Category="BulletActor|Components")
 		class UBoxComponent* BulletCollision;
-
+	 
 		UFUNCTION()
 		void OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent,
 										   AActor* OtherActor,
@@ -68,7 +71,7 @@ public:
 	FVector BulletMoveDirection;
 	 void SetBulletMoveDirection(FVector NewDirection);
 	
-	
+	void  hideboom ();
 	
 	UPROPERTY(VisibleAnywhere, Category = "Bullet|Collision")
 	class USphereComponent* CollisionComp;

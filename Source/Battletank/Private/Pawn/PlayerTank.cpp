@@ -82,7 +82,7 @@ void APlayerTank::BeginPlay()
 	Super::BeginPlay();
 	//UpdateTankGridLocation();
 	
-	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
+	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/Player3.Player3'"));
  
 	if (RenderTankComponent && TankFlipbook)
 	{
@@ -257,7 +257,7 @@ void APlayerTank::Onshoot()
 	 
 	//ATankBullet* Bullet=GetWorld()->SpawnActor<ATankBullet>(this->GetActorLocation(),this->GetActorRotation());
 	UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
-	ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,0),FRotator::ZeroRotator);//要隐藏
+	ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,5),FRotator::ZeroRotator);//要隐藏
 	BulletActor->SetBulletMoveDirection(RenderTankComponent->GetForwardVector());
 }
 

@@ -20,8 +20,8 @@ ATankBullet::ATankBullet()
  // 创建根组件
 	 RootComponent = CreateDefaultSubobject<USceneComponent>("DRootComponent");
 	//创建渲染组件 
-    	RenderBulletComponent = CreateDefaultSubobject<UPaperFlipbookComponent>("RenderBulletComponent");
-    	RenderBulletComponent->SetupAttachment(RootComponent);
+	RenderBulletComponent = CreateDefaultSubobject<UPaperFlipbookComponent>("RenderBulletComponent");
+	RenderBulletComponent->SetupAttachment(RootComponent);
 	
 	// 创建碰撞组件b
 	BulletCollision = CreateDefaultSubobject<UBoxComponent>("BulletCollision");
@@ -30,6 +30,14 @@ ATankBullet::ATankBullet()
 	 
 	 BulletCollision->bHiddenInGame =false;//测试阶段
 	
+	//爆炸flipbook
+	HitBulletAnimation = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("boom"));  
+	HitBulletAnimation->SetupAttachment(BulletCollision);
+	 
+	HitBulletAnimation->SetVisibility(false) ; // 禁止自动激活 
+	 
+	HitBulletAnimation->SetLooping(false); // 爆炸动画只播放一次 
+	HitBulletAnimation->SetPlayRate(1.0f); // 动画播放速度，1.0为原速 
 }
 
 // Called when the game starts or when spawned
@@ -37,11 +45,13 @@ void ATankBullet::BeginPlay()
 {
 	Super::BeginPlay();
 	 NormalBulletFlipbook = LoadObject<UPaperFlipbook>(  this,  TEXT("/Script/Paper2D.PaperFlipbook'/Game/SceneSprite/Bullet/Bullect1.Bullect1'"));
-	// HitBulletFlipbook = LoadObject<UPaperFlipbook>(  this,  TEXT("/Script/Paper2D.PaperFlipbook'/Game/FlappyBird/Animations/PF_Hit_Bullet.PF_Hit_Bullet'"));//爆炸时
+	// HitBulletFlipbook = LoadObject<UPaperFlipbook>(this,TEXT("/Script/Paper2D.PaperFlipbook'/Game/FlappyBird/Animations/PF_Hit_Bullet.PF_Hit_Bullet'"));//爆炸时
 	 RenderBulletComponent->SetFlipbook(NormalBulletFlipbook);
 	 RenderBulletComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
-	 
-	 
+	 Animation =LoadObject<UPaperFlipbook>(this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/SceneSprite/Bullet/Explode.Explode'"));
+	HitBulletAnimation->SetFlipbook(Animation);
+	HitBulletAnimation->SetVisibility(false) ;  
+
 	if (IsValid(BulletCollision))
 	{
 		BulletCollision->SetCollisionProfileName("OverlapAll"); 
@@ -50,8 +60,8 @@ void ATankBullet::BeginPlay()
 		BulletCollision->SetBoxExtent(FVector(1, 15, 1));  
 		
 		
-		 BulletCollision->OnComponentHit.AddDynamic(this, &ATankBullet::OnBulletHit);
-		// BulletCollision->OnComponentBeginOverlap.AddDynamic(this, &ATankBullet::OnComponentBeginOverlapEvent);
+		// BulletCollision->OnComponentHit.AddDynamic(this, &ATankBullet::OnBulletHit);
+		 BulletCollision->OnComponentBeginOverlap.AddDynamic(this, &ATankBullet::OnComponentBeginOverlapEvent);
 	}
 		
 	 HomeGameMode = Cast<AHomeGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
@@ -68,8 +78,12 @@ void ATankBullet::Tick(float DeltaTime)
 void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 { UE_LOG(LogTemp, Log, TEXT("HIT"));
-	//OverlappedComponent->DestroyComponent();
+	 OverlappedComponent->DestroyComponent();
+	  HitBulletAnimation->SetVisibility(true);
+	  HitBulletAnimation->OnFinishedPlaying.AddDynamic(this, &ATankBullet::hideboom );
 	 
+	
+	HitBulletAnimation->Play(); // 播放动画
 	// {if (OtherActor != this)
 // {
 // 	// 判断是否碰撞到"Enemy"标签的Actor
@@ -119,6 +133,12 @@ void ATankBullet::SetBulletMoveDirection(FVector NewDirection)
 {
 	BulletMoveDirection = NewDirection;
 }
+void ATankBullet:: hideboom ()
+{
+	HitBulletAnimation->SetVisibility(false) ;  
+}
+
+ 
 
  
 
