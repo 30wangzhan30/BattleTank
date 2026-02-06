@@ -30,19 +30,25 @@ AGridActor::AGridActor()
 void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
-	for (int32 i = 0; i < BrickGridComponent.Num(); i++)
+	for (int32 i = 0; i < BrickGridRenders.Num(); i++)
 	{
 		if (IsValid(BrickGridComponent[i]))
 		{
 			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
-			 BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
-			
+			BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
+			BrickGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
 		}
-		if (IsValid(BrickGridRenders[i]))
+	}
+	for (int32 i = 0; i < SteelGridRenders.Num(); i++)
+	{
+		if (IsValid(SteelGridRenders[i]))
 		{
 			 
-	 BrickGridRenders[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
-			 BrickGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			SteelGridRenders[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
+			SteelGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
 		}
 	}
 }
@@ -293,7 +299,7 @@ void AGridActor::AddSteelGrids()
 		
 			SteelRenderer -> SetSprite(SteelGrid[i]);
 		SteelGridRenders.Add(SteelRenderer);
-		// AddBrickGridCollision( SteelRenderer,i);
+		 AddBrickGridCollision( SteelRenderer,i);
 	}
 }
 
