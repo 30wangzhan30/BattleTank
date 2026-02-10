@@ -9,6 +9,7 @@
 #include "PaperFlipbook.h"
 #include "InputActionValue.h"
 #include "Actors/TankBullet.h"
+#include "TimerManager.h" 
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "FrameWork/TankController.h"
@@ -16,10 +17,11 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameStateBase/PlayerTankStateBase.h"
 #include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
-
+ 
 // Sets default values
 APlayerTank::APlayerTank()
 {
+	 
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	UCapsuleComponent* RootCapsule  = Cast<UCapsuleComponent>(GetRootComponent());
@@ -81,7 +83,7 @@ void APlayerTank::BeginPlay()
 { 
 	Super::BeginPlay();
 	//UpdateTankGridLocation();
-	
+	 TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
 	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/Player3.Player3'"));
  
 	if (RenderTankComponent && TankFlipbook)
@@ -97,11 +99,11 @@ void APlayerTank::BeginPlay()
 }
 void APlayerTank::OnKillEnemy()
 {
-	APlayerTankStateBase* GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
-	if (GameState)
+	 TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
+	if (TankGameState)
 	{
 		 
-		GameState->AddKillCount(1);
+		TankGameState->AddKillCount(1);
 	}
 }
 // Called every frame
@@ -112,7 +114,7 @@ void APlayerTank::Tick(float DeltaTime)
 	OnKillEnemy();
 {
     // 步骤1：获取 GameState 实例
-    APlayerTankStateBase* GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
+    APlayerTankStateBase * GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
     if (GameState)
     {
         // 步骤2：调用 AddKillCount
@@ -204,7 +206,13 @@ void APlayerTank::MoveInputHandler(const int32 InPlayerIndex, const FInputAction
 }
 
 void APlayerTank::FireInputHandler(const int32 InPlayerIndex, const FInputActionValue& Value)
-{Onshoot();
+{
+	if (CanFire())
+	{
+		Onshoot();
+		 
+		LastFireTime = GetWorld()->GetTimeSeconds();
+	}
  
 }
 
@@ -257,8 +265,24 @@ void APlayerTank::Onshoot()
 	 
 	//ATankBullet* Bullet=GetWorld()->SpawnActor<ATankBullet>(this->GetActorLocation(),this->GetActorRotation());
 	UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
-	ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,5),FRotator::ZeroRotator);//要隐藏
-	BulletActor->SetBulletMoveDirection(RenderTankComponent->GetForwardVector());
+	 
+	 ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,5),FRotator::ZeroRotator);//要隐藏
+     	BulletActor->SetBulletMoveDirection(RenderTankComponent->GetForwardVector());
+	 
+	
+}
+bool APlayerTank::CanFire() const
+{
+	 
+	if (!GetWorld())
+	{
+		return false;
+	}
+
+	 
+	const float CurrentTime = GetWorld()->GetTimeSeconds();
+	 
+	return (CurrentTime - LastFireTime) >= FireCooldownTime;
 }
 
 void APlayerTank::PressedFunction()
@@ -286,6 +310,41 @@ void APlayerTank::UpdateTankGridLocation()
 }
 
 void APlayerTank::SpawnBulletActor()
+{
+}
+
+void APlayerTank::ApplyAddBloodEffect( )
+{TankGameState->AddBlood(1);
+	 
+}
+
+void APlayerTank::ApplyCantBeAttackedEffect( )
+{ TankGameState->cantbeattack();
+	              // 不循环（只执行一次）
+ 
+	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/SceneSprite/Shield1.Shield1'"));
+	
+}
+
+void APlayerTank::ApplyClearAllEffect()
+{
+}
+
+void APlayerTank::ApplyProtectHomeEffect()
+{
+}
+
+void APlayerTank::ApplyAddAttackSpeedEffect()
+{TankGameState->AddATKSpeed(1); 
+	
+	FireCooldownTime=  FireCooldownTime/TankGameState->GetSessionData().atkspeed;
+}
+
+void APlayerTank::ApplyAddAtkEffect()
+{TankGameState->AddATK(5); 
+}
+
+void APlayerTank::ApplyTimerEffect()
 {
 }
 

@@ -56,6 +56,28 @@ void APlayerTankStateBase::AddScore(int32 ScoreToAdd  )
 	SessionData.Score += ScoreToAdd;
 	OnScoreChanged.Broadcast(SessionData.Score);
 }
+void APlayerTankStateBase::cantbeattack()
+{
+	SessionData.canbeattack=false;
+	OnScoreChanged.Broadcast(SessionData.canbeattack);
+}
+
+void APlayerTankStateBase::AddBlood(int32 bloodToAdd )
+{SessionData.blood+=bloodToAdd;
+	
+	OnbloodChanged.Broadcast(SessionData.blood);
+	UE_LOG(LogTemp, Error, TEXT("111"));
+}
+
+void APlayerTankStateBase::AddATK(int32 atkToAdd)
+{SessionData.atk+=atkToAdd;
+	OnAtkChanged .Broadcast(SessionData.atk);
+}
+
+void APlayerTankStateBase::	AddATKSpeed(int32 atkspeedToAdd)
+{SessionData.atkspeed+=atkspeedToAdd;
+	OnAtkSpeedChanged .Broadcast(SessionData.atkspeed);
+}
 
 // 重置单局数据（关卡切换时调用）
  
@@ -65,6 +87,10 @@ void APlayerTankStateBase::ResetSessionData()
 	OnScoreChanged.Broadcast(0);
 	OnKillCountChanged.Broadcast(0);
 	OnItemCountChanged.Broadcast(0);
+	OnbloodChanged.Broadcast(1);
+	OnAtkChanged.Broadcast(10);
+	OnAtkSpeedChanged.Broadcast(1);
+	OncanbeattackChanged.Broadcast(true);
 }
 
 void APlayerTankStateBase::ChangeBirdState(EGameState NewState)

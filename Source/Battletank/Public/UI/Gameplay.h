@@ -9,7 +9,7 @@
 #include "Components/Image.h"
 #include "Pawn/enemypawn.h"
 #include "Gameplay.generated.h"
-
+class APlayerTankStateBase;
 /**
  * 
  */
@@ -19,6 +19,9 @@ class BATTLETANK_API UGameplay : public UUserWidget
 	GENERATED_BODY()
 public :
 	virtual void NativeConstruct() override;
+	UFUNCTION()
+	 void gaming(int32 bloodToAdd);
+	APlayerTankStateBase *TankGameState;
 	UPROPERTY(EditAnywhere, Category="enemycount")
 	int enemycount;
 	UPROPERTY(EditAnywhere, Category="enemycount")
@@ -31,4 +34,6 @@ public :
 	//UWidget* tank;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UTextBlock* num ;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	UTextBlock* blood;
 };
