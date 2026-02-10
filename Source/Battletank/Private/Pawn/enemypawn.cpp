@@ -80,5 +80,17 @@ void Aenemypawn:: OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	
 	OverlappedComponent->SetGenerateOverlapEvents(false);
 	OverlappedComponent->DestroyComponent();
-	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);\
+ 
+}
+void Aenemypawn::OnEnemyDestroyed(AActor* DestroyedActor)
+{
+ 
+	if (!DestroyedActor) return;
+    
+ 
+	Aenemypawn* DestroyedEnemy = Cast<Aenemypawn>(DestroyedActor);
+	 
+
+	 
 }

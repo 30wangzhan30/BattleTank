@@ -27,11 +27,13 @@ class BATTLETANK_API Aenemypawn : public APaperCharacter
 	UCapsuleComponent* RootCapsule;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent*box;
-	 
+	void OnEnemyDestroyed(AActor* DestroyedActor);
 	void SetSpawnNextBody( );
 	void BodyMove(float Deltatime);
 	UFUNCTION()
 	void OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	};
+ 
+
  

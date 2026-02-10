@@ -4,10 +4,10 @@
  
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
-//#include "Pawn/PlayerTank.h"
+
 #include "PlayerTank.generated.h"
 
-
+class APlayerTankStateBase;
 class UFloatingPawnMovement;
 class ATankController;
 struct FInputActionValue;
@@ -25,9 +25,21 @@ struct BATTLETANK_API FGameSessionData
 	UPROPERTY(BlueprintReadWrite)
 	float LevelClearTime = 0.0f;  // 本局通关时间
 	UPROPERTY(BlueprintReadWrite)
-	int32 Score = 0;              // 单局总得分
+	int32 Score = 0;    
+	UPROPERTY(BlueprintReadWrite)
+	int32 blood = 1;     //血条数
+	UPROPERTY(BlueprintReadWrite)
+	int32 atk = 10;  //攻击（可破坏钢墙）
+	UPROPERTY(BlueprintReadWrite)
+	int32 atkspeed= 1;  //攻速
+	UPROPERTY(BlueprintReadWrite)
+	bool canbeattack= true;  //攻速
+	
+	UPROPERTY(BlueprintReadWrite)
+	int32 enemynum  ;  //敌人数量
 };
-
+ 
+ 
 // 永久存档数据（通关关卡/最佳时间/最佳得分）
 USTRUCT(BlueprintType)
 struct BATTLETANK_API FGameSaveData
@@ -57,7 +69,7 @@ private:
 	int32 PlayerIndex; // 玩家索引
 	UPROPERTY(VisibleAnywhere,Category="TankSettings")
 	float RotationSpeed; // 旋转速度
-	
+	 
 	UPROPERTY(VisibleAnywhere,Category="TankSettings")
 	float MoveSpeed; // 移动速度
 	
@@ -75,6 +87,10 @@ public:
 	int32 GetPlayerIndex() const { return PlayerIndex; }
 	
 	void InitializeTankController(ATankController* TankController);
+	UFUNCTION()
+	
+	FGameSessionData GetTankSessionDataByID( );
+	 
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -102,6 +118,16 @@ public:
 	void OnMoveDownPressed();
 	
 	void Onshoot();
+	//  开火冷却时间 
+	UPROPERTY(EditAnywhere, Category = "Tank|Fire")
+	float FireCooldownTime = 0.6f; // 默认0.5秒冷却
+
+	// 上次开火的时间戳（秒）
+	float LastFireTime = 0.0f;
+
+	//  是否可以开火（冷却是否结束）
+	bool CanFire() const;
+	
 	void OnKillEnemy();
 	
 	
@@ -119,8 +145,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class UPaperFlipbook* TankFlipbook;
 	//碰撞箱
- 
- 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Render")
 	float TileSize = 1.0f;
 
@@ -140,7 +164,25 @@ public:
 
 	int32 CurrentGridX = 0; // 左右移动索引 
 	int32 CurrentGridY = 0; // 上下移动索引 
-	 
+	APlayerTankStateBase *TankGameState;
 	ETankDirection CurrentDirection = ETankDirection::Left;//初始左
+	
+	FGameSessionData TankSessionData;
+	FGameSessionData GetTankSessionData() const { return TankSessionData; }
+	
+	
+	FTimerHandle ResetTimerHandle;
+	void ResetCooldownToZero();
+	float BaseFireCooldownTime = 5;
+	float CurrentFireCooldownTime = 0.0f;
+	
+	void  ApplyAddBloodEffect( );
+	void  ApplyCantBeAttackedEffect( );
+	void  ApplyClearAllEffect();
+    void  ApplyProtectHomeEffect();
+	void  ApplyAddAttackSpeedEffect( );
+	void  ApplyAddAtkEffect( );
+	void  ApplyTimerEffect( );
 };
+ 
  

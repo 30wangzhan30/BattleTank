@@ -51,7 +51,7 @@ void Ugameoverpage::OnGameDataChanged(EGameDataChangeType ChangeType, int32 NewV
 		 
 		break;
 	case EGameDataChangeType::Score:
-		int32 CurrentScore = GameState->GetSessionData().Score; 
+		int32 CurrentScore = GameState->GetSessionData(1).Score; 
 		//  把整数转为 FText 类型（SetText 要求的参数类型）
 		FText ScoreText = FText::AsNumber(CurrentScore);
 		// 设置文本
