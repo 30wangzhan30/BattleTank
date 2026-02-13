@@ -8,9 +8,8 @@
 #include "Components/GridPanel.h"
 #include "Components/Image.h"
 #include "Pawn/enemypawn.h"
-#include "Pawn/PlayerHud.h"
 #include "Gameplay.generated.h"
-class APlayerTankStateBase;
+
 /**
  * 
  */

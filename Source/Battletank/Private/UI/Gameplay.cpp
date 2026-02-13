@@ -1,8 +1,6 @@
 ﻿#include "UI/Gameplay.h"
 
-#include "GameStateBase/PlayerTankStateBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "Pawn/PlayerHud.h"
 #include "UI/tankui.h"
 
 void UGameplay::NativeConstruct()

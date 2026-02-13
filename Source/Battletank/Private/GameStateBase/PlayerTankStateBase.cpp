@@ -82,6 +82,28 @@ void APlayerTankStateBase::	AddATKSpeed( int32 PlayerIndex,int32 atkspeedToAdd)
 {PlayerSessionDatas[PlayerIndex].atkspeed+=atkspeedToAdd;
 	OnAtkSpeedChanged .Broadcast(PlayerSessionDatas[PlayerIndex].atkspeed);
 }
+void APlayerTankStateBase::cantbeattack()
+{
+	SessionData.canbeattack=false;
+	OnScoreChanged.Broadcast(SessionData.canbeattack);
+}
+
+void APlayerTankStateBase::AddBlood(int32 bloodToAdd )
+{SessionData.blood+=bloodToAdd;
+	
+	OnbloodChanged.Broadcast(SessionData.blood);
+	UE_LOG(LogTemp, Error, TEXT("111"));
+}
+
+void APlayerTankStateBase::AddATK(int32 atkToAdd)
+{SessionData.atk+=atkToAdd;
+	OnAtkChanged .Broadcast(SessionData.atk);
+}
+
+void APlayerTankStateBase::	AddATKSpeed(int32 atkspeedToAdd)
+{SessionData.atkspeed+=atkspeedToAdd;
+	OnAtkSpeedChanged .Broadcast(SessionData.atkspeed);
+}
 
 // 重置单局数据（关卡切换时调用）
  
