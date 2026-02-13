@@ -41,8 +41,8 @@ public:AEffectObject();
 	UPROPERTY(VisibleAnywhere)
 	
 	UPaperSpriteComponent* EffectRenderer;
+	 
 	
- 
 	
 	UPROPERTY(EditAnywhere,Category="Effect|Sprites")
 	UPaperSprite*addoneBloodeffect;

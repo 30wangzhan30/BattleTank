@@ -6,10 +6,6 @@
 void APlayerTankStateBase::BeginPlay()
 {
 	Super::BeginPlay();
-	// 玩家1（索引0）的初始数据
-	PlayerSessionDatas.Add(FGameSessionData());
-	// 玩家2（索引1）的初始数据
-	PlayerSessionDatas.Add(FGameSessionData());
 }
 
 void APlayerTankStateBase::Tick(float DeltaTime)
@@ -29,58 +25,36 @@ void APlayerTankStateBase::OnGameDataChanged(EGameDataChangeType ChangeType, int
 
 // 增加击杀数
  
-void APlayerTankStateBase::AddKillCount(int32 PlayerIndex,int32 Count )
+void APlayerTankStateBase::AddKillCount(int32 Count )
 {
-	PlayerSessionDatas[PlayerIndex].TankKillCount += Count;
+	SessionData.TankKillCount += Count;
 	AddScore(Count * 100);
-	OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].TankKillCount);
+	OnKillCountChanged.Broadcast(SessionData.TankKillCount);
 }
 
  
-void APlayerTankStateBase::AddItemCount(int32 PlayerIndex,int32 Count )
+void APlayerTankStateBase::AddItemCount(int32 Count )
 {
-	PlayerSessionDatas[PlayerIndex].ItemCount += Count;
+	SessionData.ItemCount += Count;
 	AddScore(Count * 50);
-	OnItemCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].ItemCount);
+	OnItemCountChanged.Broadcast(SessionData.ItemCount);
 }
 
 // 记录通关时间（ 
  
-void APlayerTankStateBase:: RecordLevelClearTime(int32 PlayerIndex,float Time)
+void APlayerTankStateBase:: RecordLevelClearTime(float Time)
 {
-	PlayerSessionDatas[PlayerIndex].LevelClearTime = Time;
+	SessionData.LevelClearTime = Time;
 	 
        
 }
 
 // 增加得分 
  
-void APlayerTankStateBase::AddScore(int32 PlayerIndex, int32 ScoreToAdd  )
+void APlayerTankStateBase::AddScore(int32 ScoreToAdd  )
 {
-	PlayerSessionDatas[PlayerIndex].Score += ScoreToAdd;
-	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].Score);
-}
-void APlayerTankStateBase::cantbeattack(int32 PlayerIndex)
-{
-	PlayerSessionDatas[PlayerIndex].canbeattack=false;
-	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].canbeattack);
-}
-
-void APlayerTankStateBase::AddBlood( int32 PlayerIndex,int32 bloodToAdd )
-{PlayerSessionDatas[PlayerIndex].blood+=bloodToAdd;
-	
-	OnbloodChanged.Broadcast(PlayerSessionDatas[PlayerIndex].blood);
-	 
-}
-
-void APlayerTankStateBase::AddATK( int32 PlayerIndex,int32 atkToAdd)
-{PlayerSessionDatas[PlayerIndex].atk+=atkToAdd;
-	OnAtkChanged .Broadcast(PlayerSessionDatas[PlayerIndex].atk);
-}
-
-void APlayerTankStateBase::	AddATKSpeed( int32 PlayerIndex,int32 atkspeedToAdd)
-{PlayerSessionDatas[PlayerIndex].atkspeed+=atkspeedToAdd;
-	OnAtkSpeedChanged .Broadcast(PlayerSessionDatas[PlayerIndex].atkspeed);
+	SessionData.Score += ScoreToAdd;
+	OnScoreChanged.Broadcast(SessionData.Score);
 }
 void APlayerTankStateBase::cantbeattack()
 {
@@ -107,9 +81,9 @@ void APlayerTankStateBase::	AddATKSpeed(int32 atkspeedToAdd)
 
 // 重置单局数据（关卡切换时调用）
  
-void APlayerTankStateBase::ResetSessionData(int32 PlayerIndex)
+void APlayerTankStateBase::ResetSessionData()
 {
-	PlayerSessionDatas[PlayerIndex] = FGameSessionData(); // 重置为默认值
+	SessionData = FGameSessionData(); // 重置为默认值
 	OnScoreChanged.Broadcast(0);
 	OnKillCountChanged.Broadcast(0);
 	OnItemCountChanged.Broadcast(0);
@@ -119,7 +93,6 @@ void APlayerTankStateBase::ResetSessionData(int32 PlayerIndex)
 	OncanbeattackChanged.Broadcast(true);
 }
 
- 
 void APlayerTankStateBase::ChangeBirdState(EGameState NewState)
 {
 	CurrentGameState=NewState;

@@ -74,30 +74,15 @@ void ATankBullet::Tick(float DeltaTime)
 	// 每帧调用BulletMove，让子弹持续移动
 	BulletMove(DeltaTime);
 }
-APlayerTank* ATankBullet::GetShooterTank() const
-{
-	//  坦克对象还存在时，返回指针
-	if (ShooterTankWeakPtr.IsValid())
-	{
-		return ShooterTankWeakPtr.Get();
-	}
-	return nullptr;
-}
-
-void ATankBullet::BindShooterTank(APlayerTank* InShooterTank)
-{
-	if (InShooterTank )
-	{
-		ShooterTankWeakPtr = InShooterTank;
-	}
-}
 
 void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 { UE_LOG(LogTemp, Log, TEXT("HIT"));
 	 OverlappedComponent->DestroyComponent();
 	  HitBulletAnimation->SetVisibility(true);
 	  HitBulletAnimation->OnFinishedPlaying.AddDynamic(this, &ATankBullet::hideboom );
+	 
+	
 	HitBulletAnimation->Play(); // 播放动画
 	// {if (OtherActor != this)
 // {
@@ -114,23 +99,6 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 // 		GetWorldTimerManager().SetTimer(  TimerHandle, this,  &ATankBullet::BulletDestroy, 3.f);
 // 	}
 // }
-	OtherActor->Destroy();
-	//找到子弹的发射对象，记录加分逻辑
-	//先判断敌人的种类tag，addstore对应的分数，
-	APlayerTank* Shooter = GetShooterTank();
-	TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
-	 if (Shooter->GetPlayerIndex()==0)
-	 {
-	 	 UE_LOG(LogTemp, Log, TEXT("坦克0发射的子弹击中了 ") );
-	     TankGameState->AddScore(200) ;
-	 	TankGameState->AddKillCount(1);
-	 }
-	if (Shooter->GetPlayerIndex()==1)
-	{
-		UE_LOG(LogTemp, Log, TEXT("坦克1发射的子弹击中了 ") );
-	}
-	  
-//	UE_LOG(LogTemp, Log, TEXT("坦克[%s]发射的子弹击中了：%s"), *Shooter->GetName(), *OtherActor->GetName());
 }
 
 void ATankBullet::OnBulletHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

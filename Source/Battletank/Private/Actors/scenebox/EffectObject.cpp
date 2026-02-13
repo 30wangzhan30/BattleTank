@@ -33,8 +33,6 @@ void AEffectObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
- 
-
 void AEffectObject::EffectInit(EEffectType  EffectType)
 {
  CurrentEffectType = EffectType;
@@ -152,7 +150,7 @@ void AEffectObject::ApplyAddBloodEffect(APlayerTank* PlayerTank)
 {
    
     PlayerTank->ApplyAddBloodEffect( );  
-	 
+   
 }
 
 // 2. 无敌道具
@@ -179,7 +177,7 @@ void AEffectObject::ApplyProtectHomeEffect()
 
 // 5. 加攻速道具
 void AEffectObject::ApplyAddAttackSpeedEffect(APlayerTank* PlayerTank)
-{  
+{
 	PlayerTank->ApplyAddAttackSpeedEffect( ); 
     
 }

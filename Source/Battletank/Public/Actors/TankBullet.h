@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Pawn/PlayerTank.h"
 #include "TankBullet.generated.h"
 
 UCLASS()
@@ -70,11 +69,8 @@ public:
 	float BulletMoveSpeed = 300.f;
 	UPROPERTY()
 	FVector BulletMoveDirection;
-	void SetBulletMoveDirection(FVector NewDirection);
-	UFUNCTION(BlueprintCallable, Category = "Bullet|Shooter")
-	APlayerTank*  GetShooterTank() const;
-	UFUNCTION(BlueprintCallable, Category = "Bullet|Shooter")
-	void BindShooterTank(APlayerTank* InShooterTank);
+	 void SetBulletMoveDirection(FVector NewDirection);
+	
 	void  hideboom ();
 	
 	UPROPERTY(VisibleAnywhere, Category = "Bullet|Collision")
@@ -99,9 +95,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Bullet|Settings", meta = (ClampMin = "0.5", ClampMax = "10.0"))
 	float LifeTime = 3.0f;
 
-	//  存储发射坦克的弱指针 
-	TWeakObjectPtr<APlayerTank> ShooterTankWeakPtr;
-	APlayerTankStateBase *TankGameState;
+	 
+
 private:
 	// 计时：用于生命周期销毁
 	float LifeTimer = 0.0f;

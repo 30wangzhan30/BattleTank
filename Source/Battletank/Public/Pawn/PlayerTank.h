@@ -34,12 +34,8 @@ struct BATTLETANK_API FGameSessionData
 	int32 atkspeed= 1;  //攻速
 	UPROPERTY(BlueprintReadWrite)
 	bool canbeattack= true;  //攻速
-	
-	UPROPERTY(BlueprintReadWrite)
-	int32 enemynum  ;  //敌人数量
 };
- 
- 
+
 // 永久存档数据（通关关卡/最佳时间/最佳得分）
 USTRUCT(BlueprintType)
 struct BATTLETANK_API FGameSaveData
@@ -87,10 +83,6 @@ public:
 	int32 GetPlayerIndex() const { return PlayerIndex; }
 	
 	void InitializeTankController(ATankController* TankController);
-	UFUNCTION()
-	
-	FGameSessionData GetTankSessionDataByID( );
-	 
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -145,6 +137,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Render")
 	class UPaperFlipbook* TankFlipbook;
 	//碰撞箱
+ 
+ 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Render")
 	float TileSize = 1.0f;
 
@@ -166,16 +160,7 @@ public:
 	int32 CurrentGridY = 0; // 上下移动索引 
 	APlayerTankStateBase *TankGameState;
 	ETankDirection CurrentDirection = ETankDirection::Left;//初始左
-	
-	FGameSessionData TankSessionData;
-	FGameSessionData GetTankSessionData() const { return TankSessionData; }
-	
-	
-	FTimerHandle ResetTimerHandle;
-	void ResetCooldownToZero();
-	float BaseFireCooldownTime = 5;
-	float CurrentFireCooldownTime = 0.0f;
-	
+	 
 	void  ApplyAddBloodEffect( );
 	void  ApplyCantBeAttackedEffect( );
 	void  ApplyClearAllEffect();
