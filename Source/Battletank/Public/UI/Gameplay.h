@@ -8,6 +8,7 @@
 #include "Components/GridPanel.h"
 #include "Components/Image.h"
 #include "Pawn/enemypawn.h"
+#include "Pawn/PlayerHud.h"
 #include "Gameplay.generated.h"
 class APlayerTankStateBase;
 /**
@@ -19,9 +20,13 @@ class BATTLETANK_API UGameplay : public UUserWidget
 	GENERATED_BODY()
 public :
 	virtual void NativeConstruct() override;
+	FDelegateHandle EnemyDestroyedHandle;
+	UFUNCTION()
+	void OnEnemyDestroyed(AActor* DestroyedActor);
 	UFUNCTION()
 	 void gaming(int32 bloodToAdd);
 	APlayerTankStateBase *TankGameState;
+	APlayerHud* CurrentHud;
 	UPROPERTY(EditAnywhere, Category="enemycount")
 	int enemycount;
 	UPROPERTY(EditAnywhere, Category="enemycount")
@@ -33,7 +38,10 @@ public :
 	//UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	//UWidget* tank;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UTextBlock* num ;
+	UTextBlock* num  ;
+	 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
-	UTextBlock* blood;
+	UTextBlock* blood1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	UTextBlock* blood2;
 };

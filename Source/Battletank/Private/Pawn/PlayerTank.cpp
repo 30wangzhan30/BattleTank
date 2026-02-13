@@ -77,7 +77,14 @@ void APlayerTank::InitializeTankController(ATankController* TankController)
 		}
 	}
 }
- 
+
+FGameSessionData APlayerTank::GetTankSessionDataByID( )
+{ 
+	//TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
+	 //return TankGameState->GetSessionData();
+	return GetTankSessionData();
+}
+
 // Called when the game starts or when spawned
 void APlayerTank::BeginPlay()
 { 
@@ -97,6 +104,18 @@ void APlayerTank::BeginPlay()
 	}
 	
 }
+// void APlayerTank::BindTankState(APlayerTankStateBase* InTankState)
+// {
+// 	if (InTankState)
+// 	{
+// 		TankGameState = InTankState;
+// 		UE_LOG(LogTemp, Log, TEXT("坦克%d绑定State成功！"), TankID);
+// 	}
+// 	else
+// 	{
+// 		UE_LOG(LogTemp, Warning, TEXT("坦克%d绑定State失败：State为空！"), TankID);
+// 	}
+// }
 void APlayerTank::OnKillEnemy()
 {
 	 TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
@@ -110,17 +129,7 @@ void APlayerTank::OnKillEnemy()
 void APlayerTank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//测试一下存数据(这段后面删掉)
-	OnKillEnemy();
-{
-    // 步骤1：获取 GameState 实例
-    APlayerTankStateBase * GameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
-    if (GameState)
-    {
-        // 步骤2：调用 AddKillCount
-        GameState->AddKillCount(1);
-    }
-}
+ 
 	//玩家2的移动处理
  	if (PlayerIndex == 1)
 	{
@@ -268,7 +277,11 @@ void APlayerTank::Onshoot()
 	 
 	 ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,5),FRotator::ZeroRotator);//要隐藏
      	BulletActor->SetBulletMoveDirection(RenderTankComponent->GetForwardVector());
-	 
+	if (BulletActor)
+	{
+		BulletActor->BindShooterTank(this);
+		UE_LOG(LogTemp, Log, TEXT("坦克[%s]发射子弹！"), *GetName());
+	}
 	
 }
 bool APlayerTank::CanFire() const
@@ -313,13 +326,14 @@ void APlayerTank::SpawnBulletActor()
 {
 }
 
+ 
 void APlayerTank::ApplyAddBloodEffect( )
-{TankGameState->AddBlood(1);
+{TankGameState->AddBlood(this->GetPlayerIndex(),1);
 	 
 }
 
 void APlayerTank::ApplyCantBeAttackedEffect( )
-{ TankGameState->cantbeattack();
+{ TankGameState->cantbeattack(this->GetPlayerIndex());
 	              // 不循环（只执行一次）
  
 	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/SceneSprite/Shield1.Shield1'"));
@@ -335,13 +349,19 @@ void APlayerTank::ApplyProtectHomeEffect()
 }
 
 void APlayerTank::ApplyAddAttackSpeedEffect()
-{TankGameState->AddATKSpeed(1); 
-	
-	FireCooldownTime=  FireCooldownTime/TankGameState->GetSessionData().atkspeed;
+{TankGameState->AddATKSpeed(this->GetPlayerIndex(),1); 
+	FireCooldownTime=  FireCooldownTime/TankGameState->GetSessionData(this->GetPlayerIndex()).atkspeed;
+	GetWorld()->GetTimerManager().SetTimer(
+		ResetTimerHandle,          
+		this,                       
+		&APlayerTank::ResetCooldownToZero, 
+		5.0f,                        
+		false                        
+	);
 }
 
 void APlayerTank::ApplyAddAtkEffect()
-{TankGameState->AddATK(5); 
+{TankGameState->AddATK(this->GetPlayerIndex(),5); 
 }
 
 void APlayerTank::ApplyTimerEffect()
@@ -375,6 +395,9 @@ void  APlayerTank::UpdateTankRotation()
 	SetActorRotation(NewRotation);
 }
 
+void APlayerTank::ResetCooldownToZero()
+{TankGameState->ResetSessionData(this->GetPlayerIndex());
+}
 
 
 //子弹逻辑
