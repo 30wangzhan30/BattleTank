@@ -21,11 +21,24 @@ struct BATTLETANK_API FGameSessionData
 	UPROPERTY(BlueprintReadWrite)
 	int32 TankKillCount = 0;      // 坦克击杀数
 	UPROPERTY(BlueprintReadWrite)
+	int32 KillCount1=0;//1型敌人坦克
+	UPROPERTY(BlueprintReadWrite)
+	int32 KillCount2=0;//2型敌人坦克
+	UPROPERTY(BlueprintReadWrite)
+	int32 KillCount3=0;//3型敌人坦克
+	UPROPERTY(BlueprintReadWrite)
+	 
 	int32 ItemCount = 0;      // 道具数量
 	UPROPERTY(BlueprintReadWrite)
 	float LevelClearTime = 0.0f;  // 本局通关时间
 	UPROPERTY(BlueprintReadWrite)
 	int32 Score = 0;    
+	UPROPERTY(BlueprintReadWrite)
+	int32 Score1=0;//1型敌人坦克
+	UPROPERTY(BlueprintReadWrite)
+	int32 Score2=0;//2型敌人坦克
+	UPROPERTY(BlueprintReadWrite)
+	int32 Score3=0;//3型敌人坦克
 	UPROPERTY(BlueprintReadWrite)
 	int32 blood = 1;     //血条数
 	UPROPERTY(BlueprintReadWrite)
@@ -183,6 +196,8 @@ public:
 	void  ApplyAddAttackSpeedEffect( );
 	void  ApplyAddAtkEffect( );
 	void  ApplyTimerEffect( );
+	void  ApplyScore(int score, int32 enemytag);//分数
+	void  Applaykillnumber(int tag,int32 enemytag);//击杀数
 };
  
  

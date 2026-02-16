@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/enemypawn.h"
 
 // Sets default values
 ATankBullet::ATankBullet()
@@ -102,7 +103,7 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 	// {if (OtherActor != this)
 // {
 // 	// 判断是否碰撞到"Enemy"标签的Actor
-// 	if (OtherActor->ActorHasTag(TEXT("Enemy")))
+// 	if (OtherActor->ActorHasTag(TEXT("Enemy")))0
 // 	{
 // 		// 切换到碰撞后的动画（停止循环）
 // 		RenderBulletComponent->SetLooping(false);
@@ -114,7 +115,8 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 // 		GetWorldTimerManager().SetTimer(  TimerHandle, this,  &ATankBullet::BulletDestroy, 3.f);
 // 	}
 // }
-	OtherActor->Destroy();
+	 
+	 
 	//找到子弹的发射对象，记录加分逻辑
 	//先判断敌人的种类tag，addstore对应的分数，
 	APlayerTank* Shooter = GetShooterTank();
@@ -122,12 +124,48 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 	 if (Shooter->GetPlayerIndex()==0)
 	 {
 	 	 UE_LOG(LogTemp, Log, TEXT("坦克0发射的子弹击中了 ") );
-	     TankGameState->AddScore(200) ;
-	 	TankGameState->AddKillCount(1);
+	 	Aenemypawn* EnemyTank = Cast<Aenemypawn>(OtherActor);
+	 	if (EnemyTank)
+	 	{OtherActor->Destroy();
+	 		if (EnemyTank->EnemyTag==1)
+	 		{
+	 		   //Shooter->ApplyScore(200,1);
+	 			Shooter->Applaykillnumber(200,1) ; 	
+	 		}
+	 		if (EnemyTank->EnemyTag==2)
+	 		{
+	 			//Shooter->ApplyScore(400,2);
+	 			Shooter->Applaykillnumber(400,2) ; 	
+	 		}
+	 		if (EnemyTank->EnemyTag==3)
+	 		{
+	 			//Shooter->ApplyScore(800,3);
+	 			Shooter->Applaykillnumber(800,3) ; 	
+	 		}
+	 	}
 	 }
 	if (Shooter->GetPlayerIndex()==1)
 	{
 		UE_LOG(LogTemp, Log, TEXT("坦克1发射的子弹击中了 ") );
+		Aenemypawn* EnemyTank = Cast<Aenemypawn>(OtherActor);
+		if (EnemyTank)
+		{OtherActor->Destroy();
+			if (EnemyTank->EnemyTag==1)
+			{
+				//Shooter->ApplyScore(200,1);
+				Shooter->Applaykillnumber(200,1) ; 	
+			}
+			if (EnemyTank->EnemyTag==2)
+			{
+				//Shooter->ApplyScore(400,2);
+				Shooter->Applaykillnumber(400,2) ; 	
+			}
+			if (EnemyTank->EnemyTag==3)
+			{
+				//Shooter->ApplyScore(800,3);
+				Shooter->Applaykillnumber(800,3) ; 	
+			}
+		}
 	}
 	  
 //	UE_LOG(LogTemp, Log, TEXT("坦克[%s]发射的子弹击中了：%s"), *Shooter->GetName(), *OtherActor->GetName());
@@ -175,15 +213,13 @@ void ATankBullet:: hideboom ()
  
 
 void ATankBullet::BulletMove(float DeltaTime)
-{  
-	
+{
 	// 计算本次帧的移动距离（速度 × 时间）
 	float MoveDistance = BulletMoveSpeed * DeltaTime;
 	// 根据“移动方向”和“距离”，计算新位置
 	FVector NewLocation = GetActorLocation() + (BulletMoveDirection.GetSafeNormal() * MoveDistance);
 	// 更新子弹的位置
-	  this->SetActorLocation(NewLocation);
+	this->SetActorLocation(NewLocation);
 	//if (IsValid(BulletCollision))
 	//BulletCollision->AddForce(FVector(BulletMoveDirection.X*100,BulletMoveDirection.Y*100, 0));
-	 
 }

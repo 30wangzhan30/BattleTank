@@ -116,15 +116,7 @@ void APlayerTank::BeginPlay()
 // 		UE_LOG(LogTemp, Warning, TEXT("坦克%d绑定State失败：State为空！"), TankID);
 // 	}
 // }
-void APlayerTank::OnKillEnemy()
-{
-	 TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
-	if (TankGameState)
-	{
-		 
-		TankGameState->AddKillCount(1);
-	}
-}
+ 
 // Called every frame
 void APlayerTank::Tick(float DeltaTime)
 {
@@ -367,7 +359,14 @@ void APlayerTank::ApplyAddAtkEffect()
 void APlayerTank::ApplyTimerEffect()
 {
 }
-
+void APlayerTank::ApplyScore(int score,int32 enemytag)
+{
+	TankGameState->AddScore(this->GetPlayerIndex(),score,enemytag);
+}
+void APlayerTank::Applaykillnumber(int score,int32 enemytag)
+{
+	TankGameState->AddKillCount(this->GetPlayerIndex(),score,enemytag);
+}
 
 // 核心：根据朝向更新旋转角度
 void  APlayerTank::UpdateTankRotation()

@@ -21,15 +21,16 @@ class BATTLETANK_API Aenemypawn : public APaperCharacter
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	Aenemypawn();
-	UPROPERTY()
-	class Achildtank* NextBody;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPaperFlipbookComponent* FlipbookComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPaperFlipbook * Flipbook ;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UCapsuleComponent* RootCapsule;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent*box;
-	 
-	void SetSpawnNextBody( );
-	void BodyMove(float Deltatime);
+	int EnemyTag;
+ 
 	UFUNCTION()
 	void OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

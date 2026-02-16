@@ -62,12 +62,27 @@ private:
 	UTextBlock* Text_ScoreItem4;
 
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Text_ScoreItem1_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Text_ScoreItem1_2;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Text_ScoreItem1_3;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock*  TextBlock_11;
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock* num1;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* num2;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* num3;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* num4;
- 
+	UTextBlock* TextBlock_1026;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock*num1_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock*num1_2;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock*num1_3;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock*Text_TotalScore_1;
 };

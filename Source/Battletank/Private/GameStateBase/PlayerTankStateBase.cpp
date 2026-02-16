@@ -29,10 +29,32 @@ void APlayerTankStateBase::OnGameDataChanged(EGameDataChangeType ChangeType, int
 
 // 增加击杀数
  
-void APlayerTankStateBase::AddKillCount(int32 PlayerIndex,int32 Count )
-{
-	PlayerSessionDatas[PlayerIndex].TankKillCount += Count;
-	AddScore(Count * 100);
+void APlayerTankStateBase::AddKillCount(int32 PlayerIndex, int32 scoretoadd,int32 enemytag)
+{ 
+	PlayerSessionDatas[PlayerIndex].TankKillCount += 1;
+	switch (enemytag)
+	{
+	case 1:	 
+		PlayerSessionDatas[PlayerIndex].KillCount1 += 1;
+		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount1);
+		AddScore(PlayerIndex,200, enemytag);
+		scoretoadd=200;
+		break;
+	case 2:  
+		PlayerSessionDatas[PlayerIndex].KillCount2 += 1;
+		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount2);
+		AddScore(PlayerIndex,400, enemytag);
+		scoretoadd=400;
+		break;
+	case 3: 
+		PlayerSessionDatas[PlayerIndex].KillCount3 += 1;
+		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount3);
+		AddScore(PlayerIndex,800, enemytag);
+		scoretoadd=800;
+		break;
+		default:break;;
+	}
+	AddScore(PlayerIndex,scoretoadd, enemytag);
 	OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].TankKillCount);
 }
 
@@ -40,7 +62,7 @@ void APlayerTankStateBase::AddKillCount(int32 PlayerIndex,int32 Count )
 void APlayerTankStateBase::AddItemCount(int32 PlayerIndex,int32 Count )
 {
 	PlayerSessionDatas[PlayerIndex].ItemCount += Count;
-	AddScore(Count * 50);
+	//AddScore( );
 	OnItemCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].ItemCount);
 }
 
@@ -55,11 +77,33 @@ void APlayerTankStateBase:: RecordLevelClearTime(int32 PlayerIndex,float Time)
 
 // 增加得分 
  
-void APlayerTankStateBase::AddScore(int32 PlayerIndex, int32 ScoreToAdd  )
+void APlayerTankStateBase::AddScore(int32 PlayerIndex, int32 ScoreToAdd ,int32 enemytag )
+{PlayerSessionDatas[PlayerIndex].Score += ScoreToAdd;
+	switch (enemytag)
 {
-	PlayerSessionDatas[PlayerIndex].Score += ScoreToAdd;
+case 1:	 	UE_LOG(LogTemp, Log, TEXT("1  ") );
+	PlayerSessionDatas[PlayerIndex].Score1 += ScoreToAdd;
+	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].Score1);
+
+	break;
+case 2:	UE_LOG(LogTemp, Log, TEXT("2 ") );
+	PlayerSessionDatas[PlayerIndex].Score2 += ScoreToAdd;
+	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].Score2);
+	break;
+case 3:	
+	UE_LOG(LogTemp, Log, TEXT("3 ") );
+	PlayerSessionDatas[PlayerIndex].Score3 += ScoreToAdd;
+	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].Score3);
+	break;
+default:break;;
+}
+	 
 	OnScoreChanged.Broadcast(PlayerSessionDatas[PlayerIndex].Score);
 }
+
+
+
+
 void APlayerTankStateBase::cantbeattack(int32 PlayerIndex)
 {
 	PlayerSessionDatas[PlayerIndex].canbeattack=false;

@@ -15,9 +15,15 @@ enum EGameState
 UENUM(BlueprintType)
 enum class EGameDataChangeType : uint8
 {
-	KillCount,
+	KillCount,//总
+	KillCount1,//1型敌人坦克
+	KillCount2,//2型敌人坦克
+	KillCount3,//3型敌人坦克
 	ItemCount,
-	Score,
+	Score,//总
+	Score1,//1型敌人坦克
+	Score2,//2型敌人坦克
+	Score3,//3型敌人坦克
 	blood
 };
 UCLASS()
@@ -61,7 +67,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
 	 
     // 增加击杀数
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
-    void AddKillCount(int32 PlayerIndex,int32 Count = 1);
+    void AddKillCount(int32 PlayerIndex,int32 scoretoadd,int32 enemytag );
    
 
     // 增加道具 
@@ -76,7 +82,7 @@ class BATTLETANK_API APlayerTankStateBase : public AGameStateBase
 
     // 增加得分 
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
-    void AddScore( int32 PlayerIndex,int32 ScoreToAdd = 10);
+    void AddScore( int32 PlayerIndex,int32 ScoreToAdd ,int32 enemytag);
    
     UFUNCTION(BlueprintCallable, Category = "TankGameData")
 	void AddBlood( int32 PlayerIndex,int32 bloodToAdd);
