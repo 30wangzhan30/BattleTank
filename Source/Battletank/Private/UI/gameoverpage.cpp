@@ -60,18 +60,18 @@ void Ugameoverpage::OnGameDataChanged(EGameDataChangeType ChangeType, int32 NewV
 			Text_TotalScore ->SetText(KillcountText );
 			
 			
-			int32 CurrentKillplayer2= GameState->GetSessionData(1).Score; 
+			int32 CurrentKillplayer2= GameState->GetSessionData(1).TankKillCount; 
 			FText KillTextplayer2 = FText::AsNumber(CurrentKillplayer2);
-			int32 CurrentSKill1player2= GameState->GetSessionData(1).Score1; 
+			int32 CurrentSKill1player2= GameState->GetSessionData(1).KillCount1; 
 			FText KillText1player2= FText::AsNumber(CurrentSKill1player2);
-			int32 CurrentKill2player2= GameState->GetSessionData(1).Score2; 
+			int32 CurrentKill2player2= GameState->GetSessionData(1).KillCount2; 
 			FText KillText2player2= FText::AsNumber(CurrentKill2player2);
-			int32 CurrentKill3player2= GameState->GetSessionData(1).Score3; 
+			int32 CurrentKill3player2= GameState->GetSessionData(1).KillCount3; 
 			FText KillText3player2= FText::AsNumber(CurrentKill3player2);
-			num1->SetText(KillText1player2);
-			num2->SetText(KillText2player2);
-			num3->SetText(KillText3player2);
-			Text_TotalScore ->SetText(KillTextplayer2 );
+			num1_1->SetText(KillText1player2);
+			num1_2->SetText(KillText2player2);
+			num1_3->SetText(KillText3player2);
+			Text_TotalScore_1 ->SetText(KillTextplayer2 );
 			 
 		}
 		break;
@@ -82,11 +82,11 @@ void Ugameoverpage::OnGameDataChanged(EGameDataChangeType ChangeType, int32 NewV
 		int32 CurrentScore = GameState->GetSessionData(0).Score; 
 		FText ScoreText = FText::AsNumber(CurrentScore);
 		int32 CurrentScore1= GameState->GetSessionData(0).Score1; 
-		FText ScoreText1= FText::AsNumber(CurrentScore);
+		FText ScoreText1= FText::AsNumber(CurrentScore1);
 		int32 CurrentScore2= GameState->GetSessionData(0).Score2; 
-		FText ScoreText2= FText::AsNumber(CurrentScore);
+		FText ScoreText2= FText::AsNumber(CurrentScore2);
 		int32 CurrentScore3= GameState->GetSessionData(0).Score3; 
-		FText ScoreText3= FText::AsNumber(CurrentScore);
+		FText ScoreText3= FText::AsNumber(CurrentScore3);
 		// 设置文本
 		Text_ScoreItem1->SetText(ScoreText1);
 		Text_ScoreItem2->SetText(ScoreText2);
@@ -104,7 +104,7 @@ void Ugameoverpage::OnGameDataChanged(EGameDataChangeType ChangeType, int32 NewV
 			Text_ScoreItem1_1->SetText(ScoreText1player2);
 			Text_ScoreItem1_2->SetText(ScoreText2player2);
 			Text_ScoreItem1_3->SetText(ScoreText3player2);
-		    Text_TotalScore_1 ->SetText(ScoreTextplayer2);
+		    TextBlock_11 ->SetText(ScoreTextplayer2);
 		}
 		break;
  default:break;

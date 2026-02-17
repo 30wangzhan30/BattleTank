@@ -38,19 +38,19 @@ void APlayerTankStateBase::AddKillCount(int32 PlayerIndex, int32 scoretoadd,int3
 		PlayerSessionDatas[PlayerIndex].KillCount1 += 1;
 		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount1);
 		AddScore(PlayerIndex,200, enemytag);
-		scoretoadd=200;
+		 
 		break;
 	case 2:  
 		PlayerSessionDatas[PlayerIndex].KillCount2 += 1;
 		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount2);
 		AddScore(PlayerIndex,400, enemytag);
-		scoretoadd=400;
+		 
 		break;
 	case 3: 
 		PlayerSessionDatas[PlayerIndex].KillCount3 += 1;
 		OnKillCountChanged.Broadcast(PlayerSessionDatas[PlayerIndex].KillCount3);
 		AddScore(PlayerIndex,800, enemytag);
-		scoretoadd=800;
+		 
 		break;
 		default:break;;
 	}
