@@ -90,6 +90,7 @@ void APlayerTank::BeginPlay()
 { 
 	Super::BeginPlay();
 	//UpdateTankGridLocation();
+	 
 	 TankGameState = Cast<APlayerTankStateBase>(GetWorld()->GetGameState());
 	TankFlipbook=LoadObject<UPaperFlipbook>(  this , TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/Player3.Player3'"));
  
@@ -399,4 +400,5 @@ void APlayerTank::ResetCooldownToZero()
 }
 
 
+ 
 //子弹逻辑

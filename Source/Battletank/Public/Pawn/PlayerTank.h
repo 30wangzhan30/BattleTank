@@ -164,7 +164,8 @@ public:
 	//子弹生成
 	void SpawnBulletActor();
 	USceneComponent* BulletSpawnPosition;
-	
+	 
+	 
 	//子弹对象池
 	UPROPERTY()
 	class AHomeGameModeBase* homebase;
