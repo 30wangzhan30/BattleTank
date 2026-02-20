@@ -4,8 +4,10 @@
  
 #include "Actors/scenebox/GridActor.h"
 
+#include "PaperFlipbookComponent.h"
 #include "PaperSprite.h"
 #include "PaperSpriteComponent.h"
+#include "Actors/TankBullet.h"
 #include "Components/BoxComponent.h"
 #include "Pawn/PlayerTank.h"
 
@@ -20,7 +22,7 @@ AGridActor::AGridActor()
 	GridRenderer = CreateDefaultSubobject<UPaperSpriteComponent>("GridRenderer");
 	
 	GridRenderer->SetupAttachment(RootComponent);
-	
+	GridRenderer->SetCollisionProfileName("OverlapAll");
 	//GridRenderer -> SetRelativeRotation(FRotator(0.0f,90.0f,0.0f));
 	SetActorRotation(FRotator(0.0f,90.0f,0.0f));
 	
@@ -51,8 +53,14 @@ void AGridActor::BeginPlay()
 			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
 		}
 	}
+	if (GridTrigger)
+	{
+		GridTrigger->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnGrassOverlap);
+	
+	GridTrigger->OnComponentEndOverlap.AddDynamic(this, &AGridActor::OnGrassOverOverlap);
+	}
 }
-
+ 
 void AGridActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
@@ -322,20 +330,39 @@ void AGridActor::ClearSteelGrids()
 
 void AGridActor:: OnBrickHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
-{ 	 	UE_LOG(LogTemp, Log, TEXT("hitttt"));
+{ 	  
 	HitComp->SetGenerateOverlapEvents(false);
 	HitComp->DestroyComponent();
 	HitComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	BrickGridComponent.Remove(Cast<UBoxComponent>(HitComp));
 
 }
-
+ void AGridActor:: OnGrassOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+ 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	APlayerTank *istank=Cast<APlayerTank>(OtherActor);
+	if (istank)
+	{UE_LOG(LogTemp, Log, TEXT("已隐身 ") );
+		istank->RenderTankComponent->SetVisibility(false);
+	}
+}
+void AGridActor:: OnGrassOverOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	APlayerTank *istank=Cast<APlayerTank>(OtherActor);
+	if (istank)
+	{ 
+		istank->RenderTankComponent->SetVisibility(true);
+	}
+}
 void AGridActor:: OnBrickOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{ 	 	UE_LOG(LogTemp, Log, TEXT("hitttt"));
+{ 	 	 
+	ATankBullet *isbullet=Cast<ATankBullet>(OtherActor); 
+	if (isbullet)
+	{
 	OverlappedComponent->SetGenerateOverlapEvents(false);
 	OverlappedComponent->DestroyComponent();
 	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	BrickGridComponent.Remove(Cast<UBoxComponent>(OverlappedComponent));
-
+    }
 }

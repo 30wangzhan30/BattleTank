@@ -168,10 +168,15 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 		}
 	} 
 	APlayerTank* PlayerTank = Cast<APlayerTank>(OtherActor);
-	TankGameState-> AddBlood(PlayerTank->GetPlayerIndex(),-1);
-	if (TankGameState->GetSessionData(PlayerTank->GetPlayerIndex()).blood<=1)
-	{   
-		PlayerTank->Destroy ();
+	if (PlayerTank)
+	{
+		TankGameState-> AddBlood(PlayerTank->GetPlayerIndex(),-1);
+
+
+		if (TankGameState->GetSessionData(PlayerTank->GetPlayerIndex()).blood<1)
+		{   
+			PlayerTank->Destroy ();
+		}
 	}
 //	UE_LOG(LogTemp, Log, TEXT("坦克[%s]发射的子弹击中了：%s"), *Shooter->GetName(), *OtherActor->GetName());
 }
