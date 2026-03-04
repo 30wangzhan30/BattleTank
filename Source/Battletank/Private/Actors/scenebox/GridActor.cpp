@@ -25,13 +25,14 @@ AGridActor::AGridActor()
 	GridRenderer->SetCollisionProfileName("OverlapAll");
 	//GridRenderer -> SetRelativeRotation(FRotator(0.0f,90.0f,0.0f));
 	SetActorRotation(FRotator(0.0f,90.0f,0.0f));
-	
+	GridRenderer->bHiddenInGame =false;//测试阶段
 }
 
 // Called when the game starts or when spawned
 void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
+	 
 	for (int32 i = 0; i < BrickGridRenders.Num(); i++)
 	{
 		if (IsValid(BrickGridComponent[i]))
@@ -40,6 +41,7 @@ void AGridActor::BeginPlay()
 			BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
 			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
 			BrickGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
+			BrickGridComponent[i]->bHiddenInGame =false;//测试阶段
 		}
 	}
 	for (int32 i = 0; i < SteelGridRenders.Num(); i++)
@@ -51,6 +53,7 @@ void AGridActor::BeginPlay()
 			SteelGridRenders[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
 			BrickGridComponent[i]->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnBrickOverlap);
 			BrickGridComponent[i]->OnComponentHit.AddDynamic(this, &AGridActor::OnBrickHit);
+			BrickGridComponent[i]->bHiddenInGame =false;//测试阶段
 		}
 	}
 	if (GridTrigger)
@@ -58,6 +61,7 @@ void AGridActor::BeginPlay()
 		GridTrigger->OnComponentBeginOverlap.AddDynamic(this, &AGridActor::OnGrassOverlap);
 	
 	GridTrigger->OnComponentEndOverlap.AddDynamic(this, &AGridActor::OnGrassOverOverlap);
+		GridTrigger->bHiddenInGame =false;//测试阶段
 	}
 }
  
@@ -84,7 +88,7 @@ void AGridActor::GridInit(EGridType GridType)
 	RemoveGridCollision();
 	RemoveBrickGridCollision();
 	GridRenderer -> SetSprite(nullptr);
-
+	 
 	switch (CurrentGridType) {
 	case EGridType::Empty:
 		GridRenderer -> SetSprite(EmptyGrid);
@@ -164,7 +168,7 @@ void AGridActor::AddBrickGridCollision(UPaperSpriteComponent*BrickRenderer,int I
 	Extent.Z = BrickRenderer -> GetSprite() ? BrickRenderer -> GetSprite()->GetSourceSize().Y / 2.0f : 32.f;
 	BrickGridComponent[Index] -> SetBoxExtent(Extent);
 	BrickGridComponent[Index]-> SetCollisionProfileName("BlockAll");
- 
+	 
 }
 //删除普通
 void AGridActor::RemoveGridCollision()

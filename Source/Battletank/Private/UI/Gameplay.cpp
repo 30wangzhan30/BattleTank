@@ -26,7 +26,7 @@ void UGameplay::OnEnemyDestroyed(AActor* DestroyedActor)
 	enemycount = enemys.Num();
 	num ->SetText(FText::FromString(FString::Printf(TEXT("剩余敌人：%d"), enemycount)));
 	if (TankGameState->GetSessionData( 0).blood<1||TankGameState->GetSessionData(1).blood<1||enemycount<=2)
-	{
+	{ 
 		CurrentHud->SwitchUI(EUIType::GameOverPage);
 	}
 	;

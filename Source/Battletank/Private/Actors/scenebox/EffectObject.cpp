@@ -114,6 +114,7 @@ void AEffectObject::ObjectOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	 UE_LOG(LogTemp, Log, TEXT("destroy"));
 	 EffectRenderer->SetVisibility(false);
 	APlayerTank* Tank = Cast<APlayerTank>(OtherActor);
+	if (!Tank) return;
 	// 3. 根据特效类型执行对应功能（核心分发）
 	switch (CurrentEffectType)
 	{
