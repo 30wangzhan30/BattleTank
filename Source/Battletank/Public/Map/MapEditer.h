@@ -2,11 +2,14 @@
 
 #pragma once
 
+#include <string>
+
 #include "CoreMinimal.h"
 #include "Actors/scenebox/GridActor.h"
 #include "GameFramework/Actor.h"
+#include "Interface/ISaveInterface/SaveInterface.h"
 #include "MapEditer.generated.h"
-
+ 
 // 地形类型枚举（ 
 UENUM(BlueprintType)
 enum class ETileType : uint8
@@ -34,10 +37,10 @@ struct FMapTile
 	int32 Y = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ETileType TileType = ETileType::Empty;
+	EGridType TileType = EGridType::Empty;
 
 	FMapTile() = default;
-	FMapTile(int32 InX, int32 InY, ETileType InType) : X(InX), Y(InY), TileType(InType) {}
+	FMapTile(int32 InX, int32 InY, EGridType InType) : X(InX), Y(InY), TileType(InType) {}
 };
 
 // 整张地图数据
@@ -60,7 +63,7 @@ struct FMapData
 	static FMapData FromJsonString(const FString& JsonString);
 };
 UCLASS()
-class BATTLETANK_API AMapEditer : public AActor
+class BATTLETANK_API AMapEditer : public AActor,  public ISaveInterface
 {
 	GENERATED_BODY()
 
@@ -88,7 +91,7 @@ public:
 	FIntPoint LastDrawnTile = FIntPoint(-1, -1);
 	// 选中的地形类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MapEditor|Config")
-	ETileType SelectedTileType = ETileType::Brick;
+	EGridType SelectedTileType = EGridType::Brick;
 	 UPROPERTY(EditAnywhere) 
 	TSubclassOf<AGridActor> GridActorClass;
 	
@@ -101,16 +104,19 @@ public:
 	FIntPoint BoxSelectStart;     // 框选起点（网格坐标）
 	FIntPoint BoxSelectEnd;       // 框选终点（网格坐标）
 	FColor BoxSelectColor = FColor(0, 255, 0, 100); // 框选提示颜色（半透明绿）
-	// 框选函数
 	 
+	FString CurrentLevelName;
+	 
+	
+	// 框选函数
 	 void DrawBoxSelectHint();     // 绘制框选网格提示
-	 void FillBoxSelectArea();     // 填充框选区域
+	 void FillBoxSelectArea(EGridType GridType);     // 填充框选区域
 
 	//  DrawTile函数
-	void DrawTile(int32 X, int32 Y, ETileType TileType);
+	void DrawTile(int32 X, int32 Y, EGridType TileType);
 	//  单独生成/删除单个格子 
 	
-	AGridActor* SpawnSingleTile(int32 X, int32 Y, ETileType TileType);
+	AGridActor* SpawnSingleTile(int32 X, int32 Y, EGridType TileType);
 	
 	void DestroySingleTile(int32 X, int32 Y);
 	
@@ -119,9 +125,8 @@ public:
 	void  OnMousePressed();
 	void  OnMouseReleased();
 	void OnMiddleMouseHold();
-	void  OnMiddleMouseReleased();
-	void SaveMap();
-	void LoadMap();
+	void  OnMiddleMouseReleased( );
+	 
 	// 地图保存路径
 	FString GetMapSavePath() const { return FPaths::ProjectSavedDir() / TEXT("TankMap.json"); }
 protected:
@@ -131,6 +136,19 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+	UFUNCTION(BlueprintCallable, Category = "SaveLoad")
+	bool SaveMapToFile();
+
+	// 从JSON文件加载地图
+	UFUNCTION(BlueprintCallable, Category = "SaveLoad")
+	bool LoadMapFromFile(const FString& LevelName);
+
+	// 清空当前地图（加载前调用）
+	UFUNCTION(BlueprintCallable, Category = "SaveLoad")
+	void ClearCurrentMap();
+	FString GetSaveFilePath(const FString& LevelName);
+	// 接口实现
+	virtual void OnSave (FJsonObject& OutJson) override;
+	virtual void OnLoad (const FJsonObject& InJson) override;
 	void DrawMapContainer();
 };

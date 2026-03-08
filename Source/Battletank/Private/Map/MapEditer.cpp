@@ -5,12 +5,13 @@
 
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
-#include "PaperSpriteComponent.h"
+ 
 #include "Actors/scenebox/GridActor.h"
-#include "DataWrappers/ChaosVDParticleDataWrapper.h"
+ 
 #include "Kismet/GameplayStatics.h"
-#include "Pawn/PlayerTank.h"
-
+ 
+ 
+ 
 
 // Sets default values
 AMapEditer::AMapEditer()
@@ -121,11 +122,11 @@ void AMapEditer::OnMiddleMouseHold()
 		DrawBoxSelectHint();
 	}
 }
-
-void AMapEditer::OnMiddleMouseReleased()
+ 
+void AMapEditer::OnMiddleMouseReleased( )
 {bIsBoxSelecting=false;
 	 
-	FillBoxSelectArea();
+	FillBoxSelectArea( SelectedTileType);
 	 
 }
 
@@ -152,6 +153,9 @@ void AMapEditer::Tick(float DeltaTime)
 		}
 	}
 }
+
+ 
+ 
 
 void AMapEditer::DrawMapContainer()
 {
@@ -213,12 +217,12 @@ FIntPoint AMapEditer::GetTileFromMousePosition()
 }
 
 // 绘制单个格子
-void AMapEditer::DrawTile(int32 X, int32 Y, ETileType TileType)
+void AMapEditer::DrawTile(int32 X, int32 Y, EGridType TileType)
 {
 	 FIntPoint TilePos(X, Y);
     
     // 1. 更新地图数据 
-    if (TileType == ETileType::Empty)
+    if (TileType == EGridType::Empty)
     {
         // 空格子：删除数据 + 删除对应的Actor
        // CurrentMapData.Tiles.RemoveAll([X, Y](const FMapTile& Tile) { return Tile.X == X && Tile.Y == Y; });
@@ -234,7 +238,7 @@ void AMapEditer::DrawTile(int32 X, int32 Y, ETileType TileType)
 }
 
 // 生成单个格子Actor 
-AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, ETileType TileType)
+AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 {
 	if (!GridActorClass)
 	{
@@ -429,7 +433,7 @@ void AMapEditer::DrawBoxSelectHint()
 );
 }
 // ===================== 批量填充逻辑 =====================
-void AMapEditer::FillBoxSelectArea()
+void AMapEditer::FillBoxSelectArea(EGridType GridType )
 {
     // 校验选框有效
     if (BoxSelectStart.X == -1 || BoxSelectEnd.X == -1) return;
@@ -477,7 +481,7 @@ void AMapEditer::FillBoxSelectArea()
                     if (TileActorMap.Contains(NeighborGrid))
                     {
                         AGridActor* NeighborTile = TileActorMap[NeighborGrid];
-                        if (IsValid(NeighborTile) && NeighborTile->CurrentGridType == EGridType::Brick)
+                        if (IsValid(NeighborTile) && NeighborTile->CurrentGridType == GridType)
                         {
                             bCanSpawn = false;
                             break;
@@ -508,10 +512,11 @@ void AMapEditer::FillBoxSelectArea()
 
                 if (TileActor)
                 {
-                    TileActor->CurrentGridType = EGridType::Brick;
-                    TileActor->GridInit(EGridType::Brick);
+                    TileActor->CurrentGridType = GridType;
+                    TileActor->GridInit(GridType);
                     TileActor->SetActorLabel(FString::Printf(TEXT("GridTile_%d_%d"), GridX, GridY));
                     TileActorMap.Add(TargetGrid, TileActor);
+                	CurrentMapData.Tiles.Add(FMapTile((GridX - MapSize.X/2) * GridSizeMeter, (GridY - MapSize.Y/2) * GridSizeMeter,GridType));
                     GeneratedCount++;
                 }
             }
@@ -521,96 +526,155 @@ void AMapEditer::FillBoxSelectArea()
     UE_LOG(LogTemp, Log, TEXT("框选填充完成：共生成%d个砖块（跳过已有/附近有砖块的格子）"), GeneratedCount);
 }
 
+FString AMapEditer::GetSaveFilePath(const FString& LevelName)
+{
+	// 拼接路径：项目Saved目录 + MapData文件夹 + 关卡名.json
+	FString SaveDir = FPaths::ProjectSavedDir() + TEXT("MapData/");
+	// 创建文件夹（不存在则创建）
+	IFileManager::Get().MakeDirectory(*SaveDir, true);
+	// 返回完整路径
+	return SaveDir + LevelName + TEXT(".json");
+}
+ 
+// 接口实现：保存地图数据到JSON对象
+void AMapEditer::OnSave (FJsonObject& OutJson)
+{
+	// 1. 保存基础信息
+	OutJson.SetStringField("LevelName", CurrentLevelName);
+	OutJson.SetNumberField("MapSizeX", MapSize.X);
+	OutJson.SetNumberField("MapSizeY", MapSize.Y);
+	OutJson.SetNumberField("GridSize", GridSize);
 
-// JSON序列化
-// FString FMapData::ToJsonString() const
-// {
-//     TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
-//     JsonObject->SetNumberField("MapWidth", MapSize.X);
-//     JsonObject->SetNumberField("MapHeight", MapSize.Y);
-//
-//     TArray<TSharedPtr<FJsonValue>> TilesArray;
-//     for (const FMapTile& Tile : Tiles)
-//     {
-//         TSharedPtr<FJsonObject> TileJsonObject = MakeShareable(new FJsonObject);
-//         TileJsonObject->SetNumberField("X", Tile.X);
-//         TileJsonObject->SetNumberField("Y", Tile.Y);
-//         TileJsonObject->SetNumberField("TileType", static_cast<uint8>(Tile.TileType));
-//         TilesArray.Add(MakeShareable(new FJsonValueObject(TileJsonObject)));
-//     }
-//     JsonObject->SetArrayField("Tiles", TilesArray);
-//
-//     FString JsonString;
-//     TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
-//     FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
-//     return JsonString;
-// }
+	// 2. 保存格子数据（数组）
+	TArray<TSharedPtr<FJsonValue>> TilesJsonArray;
+	for (const FMapTile& Tile : CurrentMapData.Tiles)
+	{
+		TSharedPtr<FJsonObject> TileJson = MakeShareable(new FJsonObject());
+		// 保存格子坐标和类型
+		TileJson->SetNumberField("X", Tile.X);
+		TileJson->SetNumberField("Y", Tile.Y);
+		TileJson->SetNumberField("TileType", (int32)Tile.TileType); // 枚举转int
+		// 添加到数组
+		TilesJsonArray.Add(MakeShareable(new FJsonValueObject(TileJson)));
+	}
+	OutJson.SetArrayField("Tiles", TilesJsonArray);
 
-// JSON反序列化
-// FMapData FMapData::FromJsonString(const FString& JsonString)
-// {
-//     FMapData MapData;
-//     TSharedPtr<FJsonObject> JsonObject;
-//     TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-//
-//     if (!FJsonSerializer::Deserialize(Reader, JsonObject) || !JsonObject.IsValid())
-//     {
-//         return MapData;
-//     }
-//
-//     MapData.MapSize.X = JsonObject->GetIntegerField("MapWidth");
-//     MapData.MapSize.Y = JsonObject->GetIntegerField("MapHeight");
-//
-//     TArray<TSharedPtr<FJsonValue>> TilesArray = JsonObject->GetArrayField("Tiles");
-//     for (const TSharedPtr<FJsonValue>& TileValue : TilesArray)
-//     {
-//         if (TileValue->Type != EJson::Object) continue;
-//
-//         TSharedPtr<FJsonObject> TileJsonObject = TileValue->AsObject();
-//         FMapTile Tile;
-//         Tile.X = TileJsonObject->GetIntegerField("X");
-//         Tile.Y = TileJsonObject->GetIntegerField("Y");
-//         Tile.TileType = static_cast<ETileType>(TileJsonObject->GetIntegerField("TileType"));
-//         MapData.Tiles.Add(Tile);
-//     }
-//
-//     return MapData;
-// }
-//
-// // 保存地图
-// void AMapEditer::SaveMap()
-// {
-//     FString JsonString = CurrentMapData.ToJsonString();
-//     FString SavePath = GetMapSavePath();
-//
-//     if (FFileHelper::SaveStringToFile(JsonString, *SavePath))
-//     {
-//         UE_LOG(LogTemp, Log, TEXT("地图保存成功：%s"), *SavePath);
-//     }
-//     else
-//     {
-//         UE_LOG(LogTemp, Error, TEXT("地图保存失败：%s"), *SavePath);
-//     }
-// }
+	UE_LOG(LogTemp, Log, TEXT("地图数据序列化完成：共%d个格子"), CurrentMapData.Tiles.Num());
+}
+void AMapEditer::OnLoad (const FJsonObject& InJson)
+{//if (!LoadMapFromFile( CurrentLevelName ))return;
+	// 1. 加载基础信息
+	CurrentLevelName = InJson.GetStringField("LevelName");
+	MapSize.X = InJson.GetIntegerField("MapSizeX");
+	MapSize.Y = InJson.GetIntegerField("MapSizeY");
+	GridSize = InJson.GetNumberField("GridSize");
 
-// 加载地图
-// void AMapEditer::LoadMap()
-// {
-//     FString SavePath = GetMapSavePath();
-//     FString JsonString;
-//
-//     if (!FFileHelper::LoadFileToString(JsonString, *SavePath))
-//     {
-//         UE_LOG(LogTemp, Error, TEXT("读取地图文件失败：%s"), *SavePath);
-//         return;
-//     }
-//
-//     CurrentMapData = FMapData::FromJsonString(JsonString);
-//     MapSize = CurrentMapData.MapSize;
-//
-//     // 重新绘制地图容器（适配加载的尺寸）
-//     DrawMapContainer();
-//
-//     // 生成地形Actor
-//     ClearTileActors();
-//     SpawnTileActors(CurrentMapData)
+	// 2. 清空当前地图
+	ClearCurrentMap();
+
+	// 3. 加载格子数据
+	TArray<TSharedPtr<FJsonValue>> TilesJsonArray = InJson.GetArrayField("Tiles");
+	for (const TSharedPtr<FJsonValue>& JsonValue : TilesJsonArray)
+	{
+	 
+		TSharedPtr<FJsonObject> TileJson = JsonValue->AsObject();
+		int32 X = TileJson->GetIntegerField("X");
+		int32 Y = TileJson->GetIntegerField("Y");
+		EGridType TileType = (EGridType)TileJson->GetIntegerField("TileType"); // int转枚举
+
+		// 添加到地图数据
+		CurrentMapData.Tiles.Add(FMapTile(X, Y, TileType));
+		// 生成格子Actor（复用你之前的SpawnSingleTile）
+		SpawnSingleTile(X, Y, TileType);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("地图数据反序列化完成：加载%d个格子"), TilesJsonArray.Num());
+}
+bool AMapEditer::SaveMapToFile()
+{
+	// 1. 创建JSON对象
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+	// 2. 调用接口保存数据
+	OnSave(*JsonObject);
+	// 3. 序列化JSON到字符串
+	FString JsonStr;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonStr);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
+
+	// 4. 写入文件
+	FString SavePath = GetSaveFilePath(CurrentLevelName);
+	bool bSaved = FFileHelper::SaveStringToFile(JsonStr, *SavePath);
+
+	if (bSaved)
+	{
+		UE_LOG(LogTemp, Log, TEXT("地图保存成功！路径：%s"), *SavePath);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("地图保存失败！路径：%s"), *SavePath);
+	}
+
+	return bSaved;
+}
+
+// 从JSON文件加载地图（对外调用）
+bool AMapEditer::LoadMapFromFile(const FString& LevelName)
+{
+	FString LoadPath = GetSaveFilePath(LevelName);
+	UE_LOG(LogTemp, Warning, TEXT("[LoadMapFromFile] 尝试加载JSON文件：%s"), *LoadPath);
+
+	//  检查文件是否存在  
+	if (!FPaths::FileExists(LoadPath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("[LoadMapFromFile] 加载失败：文件不存在！路径：%s"), *LoadPath);
+		return false;
+	}
+
+	//  读取JSON文件内容  
+	FString JsonStr;
+	if (!FFileHelper::LoadFileToString(JsonStr, *LoadPath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("[LoadMapFromFile] 加载失败：读取文件失败！路径：%s"), *LoadPath);
+		return false;
+	}
+	UE_LOG(LogTemp, Log, TEXT("[LoadMapFromFile] 成功读取文件，内容长度：%d字符"), JsonStr.Len());
+
+	//  反序列化JSON字符串到对象  
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonStr);
+	if (!FJsonSerializer::Deserialize(Reader, JsonObject) || !JsonObject.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[LoadMapFromFile] 加载失败：JSON格式错误！路径：%s"), *LoadPath);
+		return false;
+	}
+
+	//  调用OnLoad解析数据 
+	OnLoad(*JsonObject);
+
+	//  
+	UE_LOG(LogTemp, Log, TEXT("[LoadMapFromFile] 地图加载成功！关卡名：%s，JSON路径：%s"), *LevelName, *LoadPath);
+	return true;
+}
+
+void AMapEditer::ClearCurrentMap()
+{    int32 DestroyedCount = 0; 
+	for (auto& Pair : TileActorMap)
+	{AGridActor* TileActor = Pair.Value;
+	
+		if (IsValid(TileActor))
+		{
+			
+			TileActor->Destroy();
+			DestroyedCount++;
+		}
+	}
+
+	
+	//TileActorMap.Empty();
+
+
+	int32 ClearedTileCount = CurrentMapData.Tiles.Num();
+	CurrentMapData.Tiles.Empty();
+	UE_LOG(LogTemp, Log, TEXT("[ClearCurrentMap] 地图清空完成：销毁%d个格子Actor，清空%d个格子数据"),
+	  DestroyedCount, ClearedTileCount);
+}

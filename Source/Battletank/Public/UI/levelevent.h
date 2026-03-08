@@ -24,6 +24,8 @@ public:
 	void OnlookButtonClicked();
 	UFUNCTION()
 	void OndeletedButtonClicked();
+	UFUNCTION()
+	void Onmapcreate();
 	virtual void NativeConstruct() override;
 	UPROPERTY()
 	APlayerHud* CurrentHud;
@@ -36,4 +38,6 @@ public:
 	UButton* look;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton* deleted;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	UButton *newmap;
 };

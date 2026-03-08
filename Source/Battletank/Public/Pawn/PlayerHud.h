@@ -15,7 +15,8 @@ enum class EUIType : uint8
 	LoadingPage,  //加载页面
 	GameOverPage, // 游戏结束页面
 	GamePlayUI,   // 游戏中UI 
-	SettingUI     // 设置UI 
+	SettingUI , // 设置UI
+	Mapcreate 
 };
 
 //  
@@ -79,6 +80,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "UI Widget")
 	TSubclassOf<UUserWidget> SettingWidgetClass; //  
 	 
+	UPROPERTY(EditAnywhere, Category = "UI Widget")
+	TSubclassOf<UUserWidget> CreateMapWidgetClass; // 
 	// 存储所有UI实例 
 	TMap<EUIType, UUserWidget*> AllUIInstances;
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Components/VerticalBox.h"
 #include "chooselevel.generated.h"
@@ -22,4 +23,6 @@ public:
 	//  绑定父Widget中的垂直框 
 	UPROPERTY(meta=(BindWidget))
 	UVerticalBox* VB_MainContainer;
+	
+	 
 };

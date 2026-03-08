@@ -64,7 +64,7 @@ UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHi
 	
 	// 敌方坦克移动速度
 	UPROPERTY(EditAnywhere, Category = "AI")
-	float MoveSpeed = 20.0f;
+	float MoveSpeed = 60.0f;
 
 	// 我方坦克目标（需要在游戏中赋值）
 	UPROPERTY(EditAnywhere, Category = "AI")
