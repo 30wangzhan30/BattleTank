@@ -301,27 +301,16 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
  
 );
     if (TileActor)
-    {
-        // 设置格子类型（复用原有逻辑）
-        // switch (TileType)
-        // {
-        //     case ETileType::Brick:    TileActor->GridInit(EGridType::Brick); break;
-        //     case ETileType::Steel:    TileActor->GridInit(EGridType::Steel); break;
-        //     case ETileType::River:    TileActor->GridInit(EGridType::River); break;
-        //     case ETileType::Forest:   TileActor->GridInit(EGridType::Forest); break;
-        //     case ETileType::Ice:      TileActor->GridInit(EGridType::Ice); break;
-        //     case ETileType::Home:     TileActor->GridInit(EGridType::Home); break;
-        //     case ETileType::PlayerStart: TileActor->GridInit(EGridType::PlayerStart); break;
-        //     case ETileType::Boundary: TileActor->GridInit(EGridType::Boundary); break;
-        //     default: break;
-        // }
-    	   //
-    	   //
-        // // 绑定Actor + 记录到映射表
-        // TileActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-        // TileActor->SetActorLabel(FString::Printf(TEXT("Tile_%d_%d"), X, Y));
-        // TileActorMap.Add(FIntPoint(X, Y), TileActor); //记录映射关系
-
+    { 
+        
+        TileActor->CurrentGridType = TileType;
+    	TileActor->GridInit(TileType);
+        TileActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+         TileActor->SetActorLabel(FString::Printf(TEXT("Tile_%d_%d"), X, Y));
+       TileActorMap.Add(FIntPoint(X, Y), TileActor); //记录映射关系
+     
+    	 
+     
         UE_LOG(LogTemp, Log, TEXT("  生成单个格子：X=%d, Y=%d"), GridX, GridY);
     }
     
@@ -586,9 +575,11 @@ void AMapEditer::OnLoad (const FJsonObject& InJson)
 		CurrentMapData.Tiles.Add(FMapTile(X, Y, TileType));
 		// 生成格子Actor（复用你之前的SpawnSingleTile）
 		SpawnSingleTile(X, Y, TileType);
+		UE_LOG(LogTemp, Log, TEXT(" 格子类型  (枚举值：%d)"), static_cast<int32>(TileType));
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("地图数据反序列化完成：加载%d个格子"), TilesJsonArray.Num());
+	UE_LOG(LogTemp, Log, TEXT("地图数据反序列化完成：加载%d个格子 "), TilesJsonArray.Num());
+	 
 }
 bool AMapEditer::SaveMapToFile()
 {
