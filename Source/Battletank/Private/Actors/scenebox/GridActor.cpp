@@ -107,7 +107,7 @@ void AGridActor::GridInit(EGridType GridType)
 	case EGridType::River:
 		{
 			GridRenderer -> SetSprite(RiverGrid);
-			AddTrigger();
+			AddGridCollision();
 		}
 		break;
 	case EGridType::Forest:

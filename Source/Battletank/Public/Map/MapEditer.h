@@ -8,6 +8,7 @@
 #include "Actors/scenebox/GridActor.h"
 #include "GameFramework/Actor.h"
 #include "Interface/ISaveInterface/SaveInterface.h"
+#include "Pawn/enemypawn.h"
 #include "MapEditer.generated.h"
  
 // 地形类型枚举（ 
@@ -103,11 +104,17 @@ public:
 	bool bIsBoxSelecting = false; // 是否正在框选
 	FIntPoint BoxSelectStart;     // 框选起点（网格坐标）
 	FIntPoint BoxSelectEnd;       // 框选终点（网格坐标）
-	FColor BoxSelectColor = FColor(0, 255, 0, 100); // 框选提示颜色（半透明绿）
+	FColor BoxSelectColor =  FColor(0, 255, 0, 100); // 框选提示颜色 
 	 
 	FString CurrentLevelName;
-	 
-	
+	UPROPERTY(VisibleAnywhere, Category = "Spawn Result")
+	TArray<Aenemypawn*> SpawnedEnemies; // 保存所有生成的敌人指针，方便后续控制
+
+	UPROPERTY(EditAnywhere, Category = "Spawn Settings")
+	int32 SpawnCount; // 生成数量
+	TArray<FVector> GetAllEmptyGridPositions();
+	bool  IsGridEmpty(const FVector& GridLocation);
+	void SpawnEnemiesRandomly();
 	// 框选函数
 	 void DrawBoxSelectHint();     // 绘制框选网格提示
 	 void FillBoxSelectArea(EGridType GridType);     // 填充框选区域

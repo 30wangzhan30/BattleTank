@@ -9,9 +9,8 @@
 #include "Actors/scenebox/GridActor.h"
  
 #include "Kismet/GameplayStatics.h"
- 
- 
- 
+#include "Pawn/enemypawn.h"
+
 
 // Sets default values
 AMapEditer::AMapEditer()
@@ -35,7 +34,7 @@ AMapEditer::AMapEditer()
 void AMapEditer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//SpawnEnemiesRandomly();
 	DrawMapContainer();	
 	 
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -100,8 +99,9 @@ void AMapEditer::OnMousePressed()
 {
 	bIsMousePressed = true;
 	FIntPoint TilePos = GetTileFromMousePosition();
+	BoxSelectStart = GetTileFromMousePosition();
 	if (TilePos.X >= 0 && TilePos.Y >= 0)
-	{
+	{  
 		DrawTile(TilePos.X, TilePos.Y, SelectedTileType);
 		LastDrawnTile = TilePos;
 	} 
@@ -260,7 +260,7 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 	FVector MapCenter = FVector(
 		-(MapSize.X / 2)  ,
 		-(MapSize.Y  / 2)  ,
-		0.1f
+		5.0f
 	);
 
 	 
@@ -485,7 +485,7 @@ void AMapEditer::FillBoxSelectArea(EGridType GridType )
 	            FVector TileLoc = FVector(
 					(GridX - MapSize.X/2) * GridSizeMeter,
 					(GridY - MapSize.Y/2) * GridSizeMeter,
-					0.1f
+					5.0f
 				);
 
                
@@ -668,4 +668,55 @@ void AMapEditer::ClearCurrentMap()
 	CurrentMapData.Tiles.Empty();
 	UE_LOG(LogTemp, Log, TEXT("[ClearCurrentMap] 地图清空完成：销毁%d个格子Actor，清空%d个格子数据"),
 	  DestroyedCount, ClearedTileCount);
+}
+void AMapEditer::SpawnEnemiesRandomly()
+{
+	// 获取所有空白格子
+	TArray<FVector> EmptyGrids = GetAllEmptyGridPositions();
+	if (EmptyGrids.Num() == 0)
+	{
+		 
+		return;
+	}
+
+	// 限制生成数量不超过空白格子数
+	int32 ActualSpawnCount = FMath::Min(SpawnCount, EmptyGrids.Num());
+
+	// 随机生成敌人
+	for (int32 i = 0; i < ActualSpawnCount; i++)
+	{
+		// 随机选一个空白格子
+		int32 RandomIndex = FMath::RandRange(0, EmptyGrids.Num() - 1);
+		FVector SpawnLocation = EmptyGrids[RandomIndex];
+		TSubclassOf<Aenemypawn> EnemyPawnClass;
+		// 生成敌人
+		GetWorld()->SpawnActor<Aenemypawn>(EnemyPawnClass, SpawnLocation, FRotator::ZeroRotator);
+		// 从数组移除该格子（避免重复生成）
+		EmptyGrids.RemoveAt(RandomIndex);
+	}
+}
+bool AMapEditer::IsGridEmpty(const FVector& GridLocation)
+{
+	// 检测格子范围内是否有Actor
+	 
+	return 0;
+}
+TArray<FVector> AMapEditer::GetAllEmptyGridPositions()
+{
+	TArray<FVector> EmptyGrids;
+	// 遍历所有格子
+	for (int32 X = 0; X < MapSize.X; X++)
+	{
+		for (int32 Y = 0; Y< MapSize.Y; X++)
+		{
+			// 计算格子中心坐标
+			FVector GridLocation = FVector(X * GridSize + GridSize/2, Y * GridSize + GridSize/2,0.2F);
+			// 如果空白则加入数组
+			if (IsGridEmpty(GridLocation))
+			{
+				EmptyGrids.Add(GridLocation);
+			}
+		}
+	}
+	return EmptyGrids;
 }

@@ -35,10 +35,10 @@ void Aenemypawn::BeginPlay()
 	Super::BeginPlay();
 	//Sprites = LoadObject<UPaperFlipbook>(this, TEXT("/Script/Paper2D.PaperFlipbook'/Game/PlayerControler/TankSprite/FlipBook.FlipBook'"));
 	 
+	box->OnComponentBeginOverlap.AddDynamic(this, &Aenemypawn::OnEnemyOverlap);
 	TArray<AActor*> PlayerTankActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerTank::StaticClass(), PlayerTankActors);
 	PlayerTank = Cast<APlayerTank>(PlayerTankActors[0]);
-	box->OnComponentBeginOverlap.AddDynamic(this, &Aenemypawn::OnEnemyOverlap);
 }
 
 // Called every frame
@@ -46,7 +46,8 @@ void Aenemypawn::Tick(float DeltaTime)
 {  
 	Super::Tick(DeltaTime);
  
-	
+ 
+	 
 	
 	static float PathUpdateTimer = 0.0f;
 	PathUpdateTimer += DeltaTime;
@@ -194,7 +195,7 @@ void Aenemypawn:: OnEnemyOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 }// 世界坐标转网格坐标
 FIntPoint Aenemypawn::WorldPosToGrid(FVector WorldPos)
 {
-	// 计算地图中心（和你的地图编辑器对齐）
+	// 计算地图中心 
 	FVector MapCenter = FVector(-(MapSizeX * GridSizeMeter) / 2, -(MapSizeY * GridSizeMeter) / 2, 0);
 	// 相对地图中心的偏移
 	FVector RelativePos = WorldPos - MapCenter;
