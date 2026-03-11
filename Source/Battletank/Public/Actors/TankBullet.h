@@ -75,6 +75,7 @@ public:
 	APlayerTank*  GetShooterTank() const;
 	UFUNCTION(BlueprintCallable, Category = "Bullet|Shooter")
 	void BindShooterTank(APlayerTank* InShooterTank);
+	//UFUNCTION()
 	void  hideboom ();
 	
 	UPROPERTY(VisibleAnywhere, Category = "Bullet|Collision")

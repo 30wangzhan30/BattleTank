@@ -55,7 +55,7 @@ void AHomeGameModeBase::BeginPlay()
  		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
  		 Tank1 = GetWorld()->SpawnActor<APlayerTank>(
 			 APlayerTank::StaticClass(),
-			 FVector(100, 200, 300 ),
+			 FVector(100, 200, 17),
 			 FRotator(0, 0, 0),
 			 SpawnInfo
 		 );
@@ -69,7 +69,7 @@ void AHomeGameModeBase::BeginPlay()
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     	APlayerTank*	Tank2 = GetWorld()->SpawnActor<APlayerTank>(
     				APlayerTank::StaticClass(),
-    				FVector(100, 200, 20 ),
+    				FVector(100, 200, 17),
     				FRotator(0, 0, 0)
     				
     			);

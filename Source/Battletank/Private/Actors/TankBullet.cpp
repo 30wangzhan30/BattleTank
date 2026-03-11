@@ -58,7 +58,7 @@ void ATankBullet::BeginPlay()
 		BulletCollision->SetCollisionProfileName("OverlapAll"); 
 		BulletCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  
 		BulletCollision->SetGenerateOverlapEvents(true);  
-		BulletCollision->SetBoxExtent(FVector(1, 15, 1));  
+		BulletCollision->SetBoxExtent(FVector( 32, 32, 1));  
 		
 		
 		// BulletCollision->OnComponentHit.AddDynamic(this, &ATankBullet::OnBulletHit);
@@ -98,8 +98,9 @@ void ATankBullet::OnComponentBeginOverlapEvent(UPrimitiveComponent* OverlappedCo
 { UE_LOG(LogTemp, Log, TEXT("HIT"));
 	 OverlappedComponent->DestroyComponent();
 	  HitBulletAnimation->SetVisibility(true);
-	  HitBulletAnimation->OnFinishedPlaying.AddDynamic(this, &ATankBullet::hideboom );
-	HitBulletAnimation->Play(); // 播放动画
+	OtherComp ->DestroyComponent();
+	//HitBulletAnimation->OnFinishedPlaying.AddDynamic(this, &ATankBullet::hideboom );
+	//HitBulletAnimation->Play(); // 播放动画
 	// {if (OtherActor != this)
 // {
 // 	// 判断是否碰撞到"Enemy"标签的Actor

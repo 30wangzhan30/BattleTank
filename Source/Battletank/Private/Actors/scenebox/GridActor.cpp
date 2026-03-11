@@ -102,6 +102,7 @@ void AGridActor::GridInit(EGridType GridType)
 	case EGridType::Steel:
 		{
 			AddSteelGrids();
+			 
 		}
 		break;
 	case EGridType::River:
@@ -363,7 +364,7 @@ void AGridActor:: OnBrickOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 { 	 	 
 	ATankBullet *isbullet=Cast<ATankBullet>(OtherActor); 
 	if (isbullet)
-	{
+	{  UE_LOG(LogTemp, Log, TEXT(" 11111 ") );
 	OverlappedComponent->SetGenerateOverlapEvents(false);
 	OverlappedComponent->DestroyComponent();
 	OverlappedComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);

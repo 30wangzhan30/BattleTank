@@ -260,7 +260,7 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 	FVector MapCenter = FVector(
 		-(MapSize.X / 2)  ,
 		-(MapSize.Y  / 2)  ,
-		5.0f
+		25.0f
 	);
 
 	 
@@ -277,7 +277,7 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 	GridY = FMath::Clamp(GridY, 0, MapSize.Y  - 1);
 	FVector TileLoc = FVector(
 		GridX+ MapCenter.X  ,GridY+ MapCenter.Y ,
-		    0.2 );
+		    25);
 	 
 // 	FVector TileLoc = FVector(
 // 			X ,
@@ -302,7 +302,7 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 );
     if (TileActor)
     { 
-        
+        TileActor->SetActorScale3D(FVector3d(1.0f,0.4f,1.0f));
         TileActor->CurrentGridType = TileType;
     	TileActor->GridInit(TileType);
         TileActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
@@ -369,7 +369,7 @@ void AMapEditer::DrawBoxSelectHint()
             FVector GridWorldPos = FVector(
                 MapCenter.X + GridX * GridSize  + GridSize /2,
                 MapCenter.Y + GridY * GridSize  + GridSize /2,
-                20.1f // 略高于格子，避免遮挡
+                30.1f // 略高于格子，避免遮挡
             );
 
             // 绘制网格提示框（半透明绿）
@@ -389,7 +389,7 @@ void AMapEditer::DrawBoxSelectHint()
             FVector LineStart = FVector(
                 MapCenter.X + GridX * GridSize ,
                 MapCenter.Y + GridY * GridSize ,
-                20.2f
+                30.2f
             );
             FVector LineEndX = LineStart + FVector(GridSize , 0, 0);
             FVector LineEndY = LineStart + FVector(0, GridSize , 0);
@@ -402,12 +402,12 @@ void AMapEditer::DrawBoxSelectHint()
     FVector BoxStartWorld = FVector(
         MapCenter.X + MinGridX * GridSize ,
         MapCenter.Y + MinGridY * GridSize ,
-        20.3f
+        30.3f
     );
     FVector BoxEndWorld = FVector(
         MapCenter.X + (MaxGridX + 32) * GridSize ,
         MapCenter.Y + (MaxGridY +32) * GridSize ,
-        20.3f
+        30.3f
     );
 	DrawDebugBox(
 	GetWorld(),
@@ -485,7 +485,7 @@ void AMapEditer::FillBoxSelectArea(EGridType GridType )
 	            FVector TileLoc = FVector(
 					(GridX - MapSize.X/2) * GridSizeMeter,
 					(GridY - MapSize.Y/2) * GridSizeMeter,
-					5.0f
+					25.0f
 				);
 
                
@@ -500,7 +500,7 @@ void AMapEditer::FillBoxSelectArea(EGridType GridType )
 			);
 
                 if (TileActor)
-                {
+                {   TileActor->SetActorScale3D(FVector3d(1.0f,0.4f,1.0f));
                     TileActor->CurrentGridType = GridType;
                     TileActor->GridInit(GridType);
                     TileActor->SetActorLabel(FString::Printf(TEXT("GridTile_%d_%d"), GridX, GridY));

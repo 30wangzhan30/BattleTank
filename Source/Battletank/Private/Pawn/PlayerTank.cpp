@@ -268,7 +268,7 @@ void APlayerTank::Onshoot()
 	//ATankBullet* Bullet=GetWorld()->SpawnActor<ATankBullet>(this->GetActorLocation(),this->GetActorRotation());
 	UClass* BulletClass = LoadClass<ATankBullet>(this, TEXT("/Script/Engine.Blueprint'/Game/BulletClass/MyTankBullet.MyTankBullet_C'"));
 	 
-	 ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,5),FRotator::ZeroRotator);//要隐藏
+	 ATankBullet* BulletActor = GetWorld()->SpawnActor<ATankBullet>(BulletClass, this->GetActorLocation()+FVector( 0,0 ,0.1),FRotator::ZeroRotator);//要隐藏
      	BulletActor->SetBulletMoveDirection(RenderTankComponent->GetForwardVector());
 	if (BulletActor)
 	{

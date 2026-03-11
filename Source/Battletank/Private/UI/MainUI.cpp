@@ -42,11 +42,12 @@ PlayAnimation(animationstart);
 void UMainUI::OnGameEnterButtonHold()
 {
 	
-	PlayerSingle->SetColorAndOpacity(FLinearColor(0.2f, 0.8f, 0.2f, 0.5f)); // 浅绿色（半透明）
+	PlayerSingle->SetBackgroundColor(FLinearColor(0.2f, 0.8f, 0.2f, 0.5f)); // 浅绿色（半透明）
+	 
 }
 void UMainUI::OnGameEnterButtonHoldOver()
 {
-	PlayerSingle->SetColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
+	PlayerSingle->SetBackgroundColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
 	 
 }
  
