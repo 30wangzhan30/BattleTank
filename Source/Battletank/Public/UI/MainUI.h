@@ -84,7 +84,10 @@ private:
 //	virtual void OnGoBackInputPressed(bool& bHandled)  ;
 	  UFUNCTION()
 	 void OnGameEnterButtonClicked();
-	
+  	UFUNCTION()
+  	void  OnGameEnterButtonHold();
+  	UFUNCTION()
+  	void   OnGameEnterButtonHoldOver();
 protected:
 	//virtual void TickNative(const FGeometry& MyGeometry, float InDeltaTime) ;
 	

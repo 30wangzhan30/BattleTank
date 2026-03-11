@@ -5,11 +5,14 @@
 
 #include "Editor/WidgetCompilerLog.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/PlayerHud.h"
 
 void Udrawpage::NativeConstruct()
 {
 	Super::NativeConstruct();
-	 
+	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
+	CurrentHud = Cast<APlayerHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	Return->OnClicked.AddDynamic(this, &Udrawpage ::ReturnTo);
 	 grass->OnClicked.AddDynamic(this, &Udrawpage ::DrawGrass); 
 	 brick->OnClicked.AddDynamic(this, &Udrawpage ::DrawBrick); 
 	 water->OnClicked.AddDynamic(this, &Udrawpage ::DrawWater); 
@@ -17,6 +20,12 @@ void Udrawpage::NativeConstruct()
 	if (Save != nullptr)
 	{   Save->OnClicked.AddDynamic(this, &Udrawpage ::SaveMap);}
  
+}
+void Udrawpage::ReturnTo()
+{   if (CurrentHud)
+ CurrentHud->SwitchUI(EUIType::SettingUI);
+		 
+	 
 }
 void Udrawpage:: SaveMap()
 {

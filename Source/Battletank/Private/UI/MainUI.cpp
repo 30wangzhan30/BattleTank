@@ -21,6 +21,8 @@ PlayAnimation(animationstart);
 	{
 	 
 		PlayerSingle->OnClicked.AddDynamic(this, &UMainUI::OnGameEnterButtonClicked);
+		PlayerSingle->OnHovered.AddDynamic(this, &UMainUI::OnGameEnterButtonHold);
+		PlayerSingle->OnUnhovered.AddDynamic(this, &UMainUI::OnGameEnterButtonHold);
 	}
 	if (GetWorld() && GetWorld()->GetFirstPlayerController())
 	{
@@ -37,3 +39,15 @@ PlayAnimation(animationstart);
   	 
   	}
 }
+void UMainUI::OnGameEnterButtonHold()
+{
+	
+	PlayerSingle->SetColorAndOpacity(FLinearColor(0.2f, 0.8f, 0.2f, 0.5f)); // 浅绿色（半透明）
+}
+void UMainUI::OnGameEnterButtonHoldOver()
+{
+	PlayerSingle->SetColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
+	 
+}
+ 
+  

@@ -6,6 +6,7 @@ void Uchooselevel::NativeConstruct()
 	
 	UClass* WidgetClass = LoadClass<UUserWidget>(nullptr,  TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/StartPawn/LEVEL.LEVEL_C'"));
 	 //根据保存的关卡数创建(这里还没写)
+	for (int i = 0; i < 4; i++)
 	{
 			// 创建Widget实例 
         	UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);	 

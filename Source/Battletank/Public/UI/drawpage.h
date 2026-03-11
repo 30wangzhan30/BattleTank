@@ -6,6 +6,7 @@
 #include "Map/MapEditer.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Pawn/PlayerHud.h"
 #include "drawpage.generated.h"
  
 /**
@@ -33,6 +34,8 @@ public:
 	void  SaveMap();
 	UFUNCTION()
 	void OnErase();
+	UFUNCTION()
+	void  ReturnTo();
 	 UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
      UButton* grass;
 	 UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
@@ -49,5 +52,7 @@ public:
 	UButton *Save;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
 	UButton *Clear;
-	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category = "GameEnterPanel",meta = (BindWidget))
+	UButton *Return;
+	APlayerHud* CurrentHud;
 };

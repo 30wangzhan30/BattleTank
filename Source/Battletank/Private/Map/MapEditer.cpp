@@ -34,7 +34,7 @@ AMapEditer::AMapEditer()
 void AMapEditer::BeginPlay()
 {
 	Super::BeginPlay();
-	//SpawnEnemiesRandomly();
+	 SpawnEnemiesRandomly();
 	DrawMapContainer();	
 	 
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -673,14 +673,14 @@ void AMapEditer::SpawnEnemiesRandomly()
 {
 	// 获取所有空白格子
 	TArray<FVector> EmptyGrids = GetAllEmptyGridPositions();
-	if (EmptyGrids.Num() == 0)
+	if (EmptyGrids.Num() == 0) 
 	{
-		 
+		UE_LOG(LogTemp, Log, TEXT(" 没有空格子"));
 		return;
 	}
 
 	// 限制生成数量不超过空白格子数
-	int32 ActualSpawnCount = FMath::Min(SpawnCount, EmptyGrids.Num());
+	int32 ActualSpawnCount = FMath::Min(SpawnCount, 5);
 
 	// 随机生成敌人
 	for (int32 i = 0; i < ActualSpawnCount; i++)
@@ -697,17 +697,37 @@ void AMapEditer::SpawnEnemiesRandomly()
 }
 bool AMapEditer::IsGridEmpty(const FVector& GridLocation)
 {
-	// 检测格子范围内是否有Actor
 	 
-	return 0;
+	FVector BoxExtent = FVector(32, 32, 20); 
+	 
+	FRotator BoxRotation = FRotator::ZeroRotator;
+
+   
+	TArray<FHitResult> HitResults;
+	UKismetSystemLibrary::BoxTraceMulti(
+  GetWorld(),                  // 必须的游戏世界
+  GridLocation,                // 检测中心位置
+  GridLocation,                // 结束位置（和起始一致，静态检测）
+  BoxExtent,                   // 你要保留的核心：网格尺寸
+  FRotator::ZeroRotator,       // 固定无旋转
+  ETraceTypeQuery::TraceTypeQuery1,
+  false,                     
+  TArray<AActor*>(),           
+  EDrawDebugTrace::None,
+  HitResults,
+  true
+);   
+	UE_LOG(LogTemp, Log, TEXT(" 是否为空格子%d"),HitResults.Num() );
+	return HitResults.Num() == 0;
+	
 }
 TArray<FVector> AMapEditer::GetAllEmptyGridPositions()
 {
 	TArray<FVector> EmptyGrids;
 	// 遍历所有格子
-	for (int32 X = 0; X < MapSize.X; X++)
+	for (int32 X = 0; X < MapSize.X; X+=32)
 	{
-		for (int32 Y = 0; Y< MapSize.Y; X++)
+		for (int32 Y = 0; Y< MapSize.Y; Y+=32)
 		{
 			// 计算格子中心坐标
 			FVector GridLocation = FVector(X * GridSize + GridSize/2, Y * GridSize + GridSize/2,0.2F);
