@@ -58,7 +58,7 @@ void ATankBullet::BeginPlay()
 		BulletCollision->SetCollisionProfileName("OverlapAll"); 
 		BulletCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);  
 		BulletCollision->SetGenerateOverlapEvents(true);  
-		BulletCollision->SetBoxExtent(FVector( 32, 32, 1));  
+		BulletCollision->SetBoxExtent(FVector( 16, 1, 1));  
 		
 		
 		// BulletCollision->OnComponentHit.AddDynamic(this, &ATankBullet::OnBulletHit);

@@ -194,12 +194,12 @@ FIntPoint AMapEditer::GetTileFromMousePosition()
 	Params.AddIgnoredActor(this);
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, WorldLoc, WorldLoc + WorldDir * 1000.f, ECC_Visibility, Params))
 	{
-		if (HitResult.GetComponent() == MapContainer)
+		//if (HitResult.GetComponent() == MapContainer)
 		{ 
 			// 将世界坐标转为格子坐标
 			FVector LocalPos = MapContainer->GetComponentTransform().InverseTransformPosition(HitResult.ImpactPoint);
-			int32 TileX = FMath::FloorToInt((LocalPos.X / (GridSize / 100.f)) + MapSize.X / 2);
-			int32 TileY = FMath::FloorToInt((LocalPos.Y / (GridSize / 100.f)) + MapSize.Y / 2);
+			int32 TileX = FMath::FloorToInt((LocalPos.X / (GridSize )) + MapSize.X / 2);
+			int32 TileY = FMath::FloorToInt((LocalPos.Y / (GridSize )) + MapSize.Y / 2);
 			
 			// 边界检测
 			//if (TileX >= 0 && TileX < MapSize.X && TileY >= 0 && TileY < MapSize.Y)
@@ -207,9 +207,9 @@ FIntPoint AMapEditer::GetTileFromMousePosition()
 				//return FIntPoint(TileX, TileY);
 			}
 		}
-		else
+	//	else
 		{
-			UE_LOG(LogTemp, Log, TEXT("  射线未命中MapContainer！ "));
+			//UE_LOG(LogTemp, Log, TEXT("  射线未命中MapContainer！ "));
 		}
 	}
 
@@ -273,8 +273,8 @@ AGridActor* AMapEditer::SpawnSingleTile(int32 X, int32 Y, EGridType TileType)
 	 
 
 	// 4. 边界限制（防止生成到地图外）
-	GridX = FMath::Clamp(GridX, 0, MapSize.X  - 1);
-	GridY = FMath::Clamp(GridY, 0, MapSize.Y  - 1);
+	//GridX = FMath::Clamp(GridX, 0, MapSize.X  - 1);
+	//GridY = FMath::Clamp(GridY, 0, MapSize.Y  - 1);
 	FVector TileLoc = FVector(
 		GridX+ MapCenter.X  ,GridY+ MapCenter.Y ,
 		    25);
@@ -440,9 +440,9 @@ void AMapEditer::FillBoxSelectArea(EGridType GridType )
     TArray<FIntPoint> NeighborOffsets = {FIntPoint(0,32), FIntPoint(0,-32), FIntPoint(32,0), FIntPoint(-32,0)}; // 32邻格
 
     // 遍历选框内所有32倍网格
-    for (int32 GridX = MinGridX; GridX <= MaxGridX; GridX += 28)
+    for (int32 GridX = MinGridX; GridX <= MaxGridX; GridX += 32)
     {
-        for (int32 GridY = MinGridY; GridY <= MaxGridY; GridY += 28)
+        for (int32 GridY = MinGridY; GridY <= MaxGridY; GridY +=32)
         {
             FIntPoint TargetGrid(GridX, GridY);
             bool bCanSpawn = true;
@@ -505,7 +505,7 @@ void AMapEditer::FillBoxSelectArea(EGridType GridType )
                     TileActor->GridInit(GridType);
                     TileActor->SetActorLabel(FString::Printf(TEXT("GridTile_%d_%d"), GridX, GridY));
                     TileActorMap.Add(TargetGrid, TileActor);
-                	CurrentMapData.Tiles.Add(FMapTile((GridX - MapSize.X/2) * GridSizeMeter, (GridY - MapSize.Y/2) * GridSizeMeter,GridType));
+                	CurrentMapData.Tiles.Add(FMapTile( GridX  ,  GridY  ,GridType));
                     GeneratedCount++;
                 }
             }
@@ -540,8 +540,8 @@ void AMapEditer::OnSave (FJsonObject& OutJson)
 	{
 		TSharedPtr<FJsonObject> TileJson = MakeShareable(new FJsonObject());
 		// 保存格子坐标和类型
-		TileJson->SetNumberField("X", Tile.X);
-		TileJson->SetNumberField("Y", Tile.Y);
+		TileJson->SetNumberField("X",  Tile.X) ;   
+		TileJson->SetNumberField("Y",  Tile.Y );
 		TileJson->SetNumberField("TileType", (int32)Tile.TileType); // 枚举转int
 		// 添加到数组
 		TilesJsonArray.Add(MakeShareable(new FJsonValueObject(TileJson)));
@@ -572,9 +572,9 @@ void AMapEditer::OnLoad (const FJsonObject& InJson)
 		EGridType TileType = (EGridType)TileJson->GetIntegerField("TileType"); // int转枚举
 
 		// 添加到地图数据
-		CurrentMapData.Tiles.Add(FMapTile(X, Y, TileType));
+		CurrentMapData.Tiles.Add(FMapTile( X,Y, TileType));
 		// 生成格子Actor（复用你之前的SpawnSingleTile）
-		SpawnSingleTile(X, Y, TileType);
+		SpawnSingleTile( X ,Y , TileType);
 		UE_LOG(LogTemp, Log, TEXT(" 格子类型  (枚举值：%d)"), static_cast<int32>(TileType));
 	}
 
